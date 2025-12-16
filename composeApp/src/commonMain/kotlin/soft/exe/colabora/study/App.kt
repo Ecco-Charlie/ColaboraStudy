@@ -2,47 +2,46 @@ package soft.exe.colabora.study
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.safeContentPadding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.buildAnnotatedString
-import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import colaborastudy.composeapp.generated.resources.DynaPuff_VariableFont_wdth
 import colaborastudy.composeapp.generated.resources.Res
 import colaborastudy.composeapp.generated.resources.logo
-import org.jetbrains.compose.resources.Font
+import colaborastudy.composeapp.generated.resources.logo_dark
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
+import soft.exe.colabora.study.ui.theme.ColaboraStudyTheme
 
 @Composable
 @Preview
 fun App() {
-    MaterialTheme {
+    ColaboraStudyTheme {
         Column(
             modifier = Modifier
-                .background(Color(0xffeef1ef))
-                .safeContentPadding()
-                .fillMaxSize(),
+                .fillMaxSize()
+                .background(MaterialTheme.colorScheme.surface),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
             Image(
-                painterResource(Res.drawable.logo),
+                if (isSystemInDarkTheme()) painterResource(Res.drawable.logo_dark) else painterResource(
+                    Res.drawable.logo
+                ),
                 contentDescription = "ColaboraStudy Logo",
                 modifier = Modifier.size(250.dp)
             )
@@ -51,32 +50,33 @@ fun App() {
                 text = buildAnnotatedString {
                     withStyle(
                         style = SpanStyle(
-                            color = Color(0xff1c2321)
+                            color = MaterialTheme.colorScheme.primary
                         )
                     ) {
                         append("Colabora")
                     }
                     withStyle(
                         style = SpanStyle(
-                            color = Color(0xff5e6572)
+                            color = MaterialTheme.colorScheme.tertiary
                         )
                     ) {
                         append("Study")
                     }
                 },
                 style = TextStyle(
-                    fontFamily = FontFamily(
-                        Font(
-                            Res.font.DynaPuff_VariableFont_wdth
-                        )
-                    ),
+                    fontFamily = MaterialTheme.typography.displayLarge.fontFamily,
                     fontSize = 40.sp
                 )
             )
             Spacer(Modifier.height(10.dp))
             Text(
-                text = "Running in platform: ${getPlatform().name}"
+                text = "Running in platform: ${getPlatform().name}",
+                style = TextStyle(
+                    color = MaterialTheme.colorScheme.onSurface,
+                    fontFamily = MaterialTheme.typography.bodyMedium.fontFamily
+                )
             )
+
         }
     }
 }
