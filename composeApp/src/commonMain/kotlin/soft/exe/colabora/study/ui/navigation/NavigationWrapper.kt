@@ -6,6 +6,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import soft.exe.colabora.study.ui.screens.HomeScreen
+import soft.exe.colabora.study.ui.screens.LoginScreen
 
 @Composable
 fun NavigationWrapper() {
@@ -13,8 +14,18 @@ fun NavigationWrapper() {
 
     NavHost(navController = navController, startDestination = Home) {
         composable<Home> {
-            HomeScreen()
+            HomeScreen { navigateHandle(navController, it) }
+        }
+        composable<Login> {
+            LoginScreen()
         }
     }
 
+}
+
+private fun navigateHandle(navController: NavHostController, navEvent: NavigationEvent) {
+    when (navEvent) {
+        is NavigationEvent.NavigateTo -> navController.navigate(navEvent.route)
+        is NavigationEvent.NavigateBack -> navController.popBackStack()
+    }
 }
