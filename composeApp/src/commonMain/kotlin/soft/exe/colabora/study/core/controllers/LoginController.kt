@@ -9,16 +9,28 @@ import com.attafitamim.krop.core.crop.CropError
 import com.attafitamim.krop.core.crop.CropResult
 import com.attafitamim.krop.core.crop.crop
 import com.attafitamim.krop.core.crop.imageCropper
+import com.attafitamim.krop.filekit.encodeToByteArray
 import com.attafitamim.krop.filekit.toImageSrc
 import io.github.vinceglb.filekit.FileKit
+import io.github.vinceglb.filekit.PlatformFile
 import io.github.vinceglb.filekit.dialogs.FileKitType
 import io.github.vinceglb.filekit.dialogs.openFilePicker
+import io.github.vinceglb.filekit.filesDir
+import io.github.vinceglb.filekit.path
 import io.github.vinceglb.filekit.size
+import io.github.vinceglb.filekit.write
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
+import soft.exe.colabora.study.core.entity.UserData
+import soft.exe.colabora.study.core.service.UserDataService
+import soft.exe.colabora.study.core.utils.LoadState
+import soft.exe.colabora.study.ui.navigation.Home
+import soft.exe.colabora.study.ui.navigation.NavigationEvent
 
-class LoginController : ViewModel() {
+class LoginController(private val udService: UserDataService) : ViewModel() {
 
     private val _username = MutableStateFlow("")
     val username: StateFlow<String> = _username
@@ -27,6 +39,12 @@ class LoginController : ViewModel() {
     val image: StateFlow<ImageBitmap?> = _image
 
     val imageCropper = imageCropper()
+
+    private val _load = MutableStateFlow<LoadState>(LoadState.Ok)
+    val load: StateFlow<LoadState> = _load
+
+    private val _navEvent: Channel<NavigationEvent> = Channel()
+    val navEvent = _navEvent.receiveAsFlow()
 
     init {
         viewModelScope.launch {
@@ -54,6 +72,24 @@ class LoginController : ViewModel() {
                     _image.value = res.bitmap
                 }
             }
+        }
+    }
+
+    fun saveUserData() {
+        if (_username.value.isEmpty()) {
+            return
+        }
+        _load.value = LoadState.Load
+        val pFile = PlatformFile(FileKit.filesDir, "avatar")
+        viewModelScope.launch {
+            pFile.write(_image.value!!.encodeToByteArray())
+            val ud = UserData(
+                username = _username.value,
+                picturePath = pFile.path,
+                picture = _image.value
+            )
+            udService.saveUserData(ud)
+            _navEvent.send(NavigationEvent.NavigateToAndClear(route = Home))
         }
     }
 

@@ -17,7 +17,7 @@ fun NavigationWrapper() {
             HomeScreen { navigateHandle(navController, it) }
         }
         composable<Login> {
-            LoginScreen()
+            LoginScreen { navigateHandle(navController, it) }
         }
     }
 
@@ -27,5 +27,12 @@ private fun navigateHandle(navController: NavHostController, navEvent: Navigatio
     when (navEvent) {
         is NavigationEvent.NavigateTo -> navController.navigate(navEvent.route)
         is NavigationEvent.NavigateBack -> navController.popBackStack()
+        is NavigationEvent.NavigateToAndClear -> navController.navigate(navEvent.route) {
+            popUpTo(navController.graph.startDestinationId) {
+                inclusive = true
+                saveState = true
+            }
+            launchSingleTop = true
+        }
     }
 }

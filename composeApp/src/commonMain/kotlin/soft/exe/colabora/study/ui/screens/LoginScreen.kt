@@ -25,6 +25,7 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -45,16 +46,25 @@ import org.jetbrains.compose.resources.vectorResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.koin.compose.viewmodel.koinViewModel
 import soft.exe.colabora.study.core.controllers.LoginController
+import soft.exe.colabora.study.ui.navigation.NavigationEvent
 
 @Preview
 @Composable
 fun LoginScreen(
-    controller: LoginController = koinViewModel()
+    controller: LoginController = koinViewModel(),
+    onNavigate: (NavigationEvent) -> Unit
 ) {
     val scrollState = rememberScrollState()
     val username by controller.username.collectAsState()
     val image by controller.image.collectAsState()
     val cropState = controller.imageCropper.cropState
+    val load by controller.load.collectAsState()
+
+    LaunchedEffect(true) {
+        controller.navEvent.collect {
+            onNavigate(it)
+        }
+    }
 
     Scaffold {
 
@@ -137,15 +147,19 @@ fun LoginScreen(
                     }
                 )
                 Spacer(Modifier.height(20.dp))
-                Button(
-                    onClick = {},
-                    shape = MaterialTheme.shapes.small,
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    Text(
-                        text = stringResource(Res.string.next),
-                        fontFamily = MaterialTheme.typography.headlineMedium.fontFamily
-                    )
+                if (load.isLoad) {
+                    CircularProgressIndicator(Modifier.align(Alignment.CenterHorizontally))
+                } else {
+                    Button(
+                        onClick = controller::saveUserData,
+                        shape = MaterialTheme.shapes.small,
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Text(
+                            text = stringResource(Res.string.next),
+                            fontFamily = MaterialTheme.typography.headlineMedium.fontFamily
+                        )
+                    }
                 }
             }
             Spacer(Modifier.weight(1f))
