@@ -48,6 +48,9 @@ kotlin {
             implementation(libs.navigation.compose)
             implementation(libs.multiplatform.settings.no.arg)
             implementation(libs.kotlinx.serialization.json)
+            implementation(libs.filekit.dialogs.compose)
+            implementation(libs.krop.ui)
+            implementation(libs.krop.extension.filekit)
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)

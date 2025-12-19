@@ -1,6 +1,7 @@
 package soft.exe.colabora.study.ui.screens
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -17,6 +18,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
@@ -35,10 +37,9 @@ import colaborastudy.composeapp.generated.resources.camera_icon
 import colaborastudy.composeapp.generated.resources.create_profile
 import colaborastudy.composeapp.generated.resources.next
 import colaborastudy.composeapp.generated.resources.tap_to_add_avatar
-import colaborastudy.composeapp.generated.resources.unknow_user
 import colaborastudy.composeapp.generated.resources.username
 import colaborastudy.composeapp.generated.resources.your_username
-import org.jetbrains.compose.resources.imageResource
+import com.attafitamim.krop.ui.ImageCropperDialog
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.resources.vectorResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
@@ -52,8 +53,18 @@ fun LoginScreen(
 ) {
     val scrollState = rememberScrollState()
     val username by controller.username.collectAsState()
+    val image by controller.image.collectAsState()
+    val cropState = controller.imageCropper.cropState
 
     Scaffold {
+
+        if (cropState != null)
+        {
+            ImageCropperDialog(
+                state = cropState,
+            )
+        }
+
         Column (
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier.fillMaxSize().safeContentPadding().padding(30.dp).verticalScroll(scrollState)
@@ -68,13 +79,22 @@ fun LoginScreen(
             Box(
                 contentAlignment = Alignment.BottomEnd
             ) {
-                Image(
-                    bitmap = imageResource(Res.drawable.unknow_user),
-                    contentDescription = "Unknow User",
+                Box(
+                    contentAlignment = Alignment.Center,
                     modifier = Modifier
-                        .clip(CircleShape)
                         .size(200.dp)
-                )
+                        .clip(CircleShape)
+                        .clickable(onClick = controller::pickImage)
+                ) {
+                    if (image == null) {
+                        CircularProgressIndicator()
+                    } else {
+                        Image(
+                            bitmap = image!!,
+                            contentDescription = "Unknow User"
+                        )
+                    }
+                }
                 Card(
                     shape = CircleShape,
                     colors = CardDefaults.cardColors(
