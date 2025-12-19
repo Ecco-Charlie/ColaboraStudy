@@ -23,6 +23,8 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -40,11 +42,17 @@ import org.jetbrains.compose.resources.imageResource
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.resources.vectorResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
+import org.koin.compose.viewmodel.koinViewModel
+import soft.exe.colabora.study.core.controllers.LoginController
 
 @Preview
 @Composable
-fun LoginScreen() {
+fun LoginScreen(
+    controller: LoginController = koinViewModel()
+) {
     val scrollState = rememberScrollState()
+    val username by controller.username.collectAsState()
+
     Scaffold {
         Column (
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -100,8 +108,9 @@ fun LoginScreen() {
                 )
                 Spacer(Modifier.height(5.dp))
                 OutlinedTextField(
-                    value = "",
-                    onValueChange = {},
+                    value = username,
+                    onValueChange = controller::onChangeUsername,
+                    singleLine = true,
                     modifier = Modifier.fillMaxWidth(),
                     placeholder = {
                         Text(stringResource(Res.string.your_username))
