@@ -51,6 +51,8 @@ kotlin {
             implementation(libs.filekit.dialogs.compose)
             implementation(libs.krop.ui)
             implementation(libs.krop.extension.filekit)
+            implementation(libs.kotlinx.datetime)
+            implementation(libs.datetime.wheel.picker)
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)

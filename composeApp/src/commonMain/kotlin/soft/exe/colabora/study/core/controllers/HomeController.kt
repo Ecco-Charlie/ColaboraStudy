@@ -1,6 +1,5 @@
 package soft.exe.colabora.study.core.controllers
 
-import androidx.compose.ui.graphics.ImageBitmap
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.channels.Channel
@@ -24,6 +23,41 @@ class HomeController(private val udService: UserDataService) : ViewModel() {
 
     var userData: UserData? = null
         private set
+
+    private val _description = MutableStateFlow("")
+    val description: StateFlow<String> = _description
+
+    fun onDescriptionChange(value: String) {
+        this._description.value = value
+    }
+
+    private val _numOfQuestions = MutableStateFlow(5f)
+    val numOfQuestions: StateFlow<Float> = _numOfQuestions
+
+    fun onChangeNumOfQuestions(value: Float) {
+        this._numOfQuestions.value = value
+    }
+
+    private val _difficulty = MutableStateFlow(0f)
+    val difficulty: StateFlow<Float> = _difficulty
+
+    fun onChangeDifficulty(value: Float) {
+        this._difficulty.value = value
+    }
+
+    private val _hours = MutableStateFlow(0)
+    val hours: StateFlow<Int> = _hours
+
+    fun onChangeHours(value: Int) {
+        this._hours.value = value
+    }
+
+    private val _minutes = MutableStateFlow(0)
+    val minutes: StateFlow<Int> = _minutes
+
+    fun onChangeMinutes(value: Int) {
+        this._minutes.value = value
+    }
 
     init {
         viewModelScope.launch {

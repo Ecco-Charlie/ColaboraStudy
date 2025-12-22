@@ -4,4 +4,21 @@
     <string name="username">Username</string>
     <string name="next">Next</string>
     <string name="your_username">Your username</string>
+    <string name="create_exam">Create an exam</string>
+    <string name="topic_description">Topic description</string>
+    <string name="describe_topic">Describe the topic you want to generate questions about.</string>
+    <string name="upload_photo">And/Or upload a photo</string>
+    <string name="click_to_photo">Click to add a reference photo</string>
+    <string name="select_file">Select a file</string>
+    <string name="exam_settings">Exam settings</string>
+    <string name="number_questions">Number of questions:</string>
+    <string name="difficulty">Difficulty</string>
+    <string-array name="difficulties">
+        <item>Easy</item>
+        <item>Medium</item>
+        <item>Hard</item>
+    </string-array>
+    <string name="exam_time">Exam time</string>
+    <string name="hours">Hours</string>
+    <string name="minutes">Minutes</string>
 </resources>
