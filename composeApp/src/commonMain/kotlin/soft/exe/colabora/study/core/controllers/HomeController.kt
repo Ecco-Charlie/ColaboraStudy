@@ -1,12 +1,22 @@
 package soft.exe.colabora.study.core.controllers
 
+import androidx.compose.ui.graphics.ImageBitmap
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import colaborastudy.composeapp.generated.resources.Res
+import colaborastudy.composeapp.generated.resources.base_prompt
+import colaborastudy.composeapp.generated.resources.text_image_prompt
+import colaborastudy.composeapp.generated.resources.text_prompt
+import io.github.vinceglb.filekit.FileKit
+import io.github.vinceglb.filekit.dialogs.FileKitType
+import io.github.vinceglb.filekit.dialogs.compose.util.toImageBitmap
+import io.github.vinceglb.filekit.dialogs.openFilePicker
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
+import org.jetbrains.compose.resources.getString
 import soft.exe.colabora.study.core.entity.UserData
 import soft.exe.colabora.study.core.service.UserDataService
 import soft.exe.colabora.study.core.utils.LoadState
@@ -59,6 +69,16 @@ class HomeController(private val udService: UserDataService) : ViewModel() {
         this._minutes.value = value
     }
 
+    private val _photo = MutableStateFlow<ImageBitmap?>(null)
+    val photo: StateFlow<ImageBitmap?> = _photo
+
+    fun changePhoto() {
+        viewModelScope.launch {
+            val res = FileKit.openFilePicker(type = FileKitType.Image) ?: return@launch
+            _photo.value = res.toImageBitmap()
+        }
+    }
+
     init {
         viewModelScope.launch {
             val ud = udService.instance
@@ -69,6 +89,25 @@ class HomeController(private val udService: UserDataService) : ViewModel() {
                 userData = ud
                 _load.value = LoadState.Ok
             }
+        }
+    }
+
+    fun generateQuestions() {
+        this._load.value = LoadState.Load
+        if (this._description.value.isEmpty())
+            return
+        val type = if (this._photo.value != null) Res.string.text_image_prompt
+                    else Res.string.text_prompt
+
+        viewModelScope.launch {
+            val prompt = getString(
+                Res.string.base_prompt,
+                _numOfQuestions.value.toInt(),
+                _description.value,
+                _difficulty.value.toInt(),
+                ((_minutes.value+(_hours.value*60)) / _numOfQuestions.value.toInt()),
+                getString(type)
+            )
         }
     }
 

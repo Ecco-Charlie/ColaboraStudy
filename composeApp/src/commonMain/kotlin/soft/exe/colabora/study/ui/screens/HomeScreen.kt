@@ -3,6 +3,7 @@ package soft.exe.colabora.study.ui.screens
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -35,6 +36,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -54,6 +56,7 @@ import colaborastudy.composeapp.generated.resources.exam_time
 import colaborastudy.composeapp.generated.resources.hours
 import colaborastudy.composeapp.generated.resources.minutes
 import colaborastudy.composeapp.generated.resources.number_questions
+import colaborastudy.composeapp.generated.resources.required_field
 import colaborastudy.composeapp.generated.resources.select_file
 import colaborastudy.composeapp.generated.resources.topic_description
 import colaborastudy.composeapp.generated.resources.upload
@@ -81,6 +84,7 @@ fun HomeScreen(
     val description by controller.description.collectAsStateWithLifecycle()
     val numOfQuestions by controller.numOfQuestions.collectAsStateWithLifecycle()
     val difficulty by controller.difficulty.collectAsStateWithLifecycle()
+    val photo by controller.photo.collectAsStateWithLifecycle()
 
     LaunchedEffect(true) {
         controller.navEvent.collect { onNavigate(it) }
@@ -100,7 +104,7 @@ fun HomeScreen(
 
             // Body
             TopicContent(
-                title = stringResource(Res.string.topic_description)
+                title = stringResource(Res.string.topic_description) + " *"
             ) {
                 OutlinedTextField(
                     value = description,
@@ -115,6 +119,13 @@ fun HomeScreen(
                     shape = MaterialTheme.shapes.medium,
                     modifier = Modifier.fillMaxWidth()
                 )
+                Text(
+                    text = stringResource(Res.string.required_field),
+                    color = MaterialTheme.colorScheme.primary,
+                    fontSize = 15.sp,
+                    textAlign = TextAlign.End,
+                    modifier = Modifier.fillMaxWidth()
+                )
             }
 
             Spacer(Modifier.height(30.dp))
@@ -122,7 +133,10 @@ fun HomeScreen(
             TopicContent(
                 title = stringResource(Res.string.upload_photo)
             ) {
-                UploadImage()
+                UploadImage(
+                    photo = photo,
+                    onClick = controller::changePhoto
+                )
             }
 
             Spacer(Modifier.height(20.dp))
@@ -173,7 +187,7 @@ fun HomeScreen(
             }
             Spacer(Modifier.height(20.dp))
             Button(
-                onClick = {},
+                onClick = controller::generateQuestions,
                 modifier = Modifier.widthIn(max = 450.dp).fillMaxWidth(),
                 ) {
                 Text(
@@ -216,7 +230,9 @@ private fun Header(userData: UserData?, isLoading: Boolean) {
 
 @Composable
 private fun UploadImage(
-    accentColor: Color = MaterialTheme.colorScheme.onSurfaceVariant
+    accentColor: Color = MaterialTheme.colorScheme.onSurfaceVariant,
+    onClick: () -> Unit,
+    photo: ImageBitmap?
 ) {
     Box (
         modifier = Modifier
@@ -229,37 +245,45 @@ private fun UploadImage(
             )
             .widthIn(max = 350.dp)
             .aspectRatio(1.5f)
+            .clickable(onClick = onClick)
     ) {
         Column(
-            modifier = Modifier.fillMaxSize().padding(40.dp),
+            modifier = Modifier.fillMaxSize().padding(35.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
-            Icon(
-                vectorResource(Res.drawable.add_photo),
-                contentDescription = "Add photo",
-                modifier = Modifier.size(50.dp),
-                tint = accentColor
-            )
-            Spacer(Modifier.height(5.dp))
-            Text(
-                text = stringResource(Res.string.click_to_photo),
-                fontWeight = FontWeight.Bold,
-                color = accentColor
-            )
-            Spacer(Modifier.weight(1f))
-            Row(
-                verticalAlignment = Alignment.CenterVertically
-            ) {
+            if (photo == null) {
                 Icon(
-                    vectorResource(Res.drawable.upload),
-                    contentDescription = "Upload photo",
-                    modifier = Modifier.size(30.dp),
+                    vectorResource(Res.drawable.add_photo),
+                    contentDescription = "Add photo",
+                    modifier = Modifier.size(50.dp),
                     tint = accentColor
                 )
+                Spacer(Modifier.height(5.dp))
                 Text(
-                    text = stringResource(Res.string.select_file),
+                    text = stringResource(Res.string.click_to_photo),
+                    fontWeight = FontWeight.Bold,
                     color = accentColor
+                )
+                Spacer(Modifier.weight(1f))
+                Row(
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Icon(
+                        vectorResource(Res.drawable.upload),
+                        contentDescription = "Upload photo",
+                        modifier = Modifier.size(30.dp),
+                        tint = accentColor
+                    )
+                    Text(
+                        text = stringResource(Res.string.select_file),
+                        color = accentColor
+                    )
+                }
+            } else {
+                Image(
+                    photo,
+                    contentDescription = "Photo reference"
                 )
             }
         }

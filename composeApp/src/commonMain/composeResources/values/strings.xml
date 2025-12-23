@@ -7,6 +7,7 @@
     <string name="create_exam">Create an exam</string>
     <string name="topic_description">Topic description</string>
     <string name="describe_topic">Describe the topic you want to generate questions about.</string>
+    <string name="required_field">This field is required</string>
     <string name="upload_photo">And/Or upload a photo</string>
     <string name="click_to_photo">Click to add a reference photo</string>
     <string name="select_file">Select a file</string>
@@ -21,4 +22,49 @@
     <string name="exam_time">Exam time</string>
     <string name="hours">Hours</string>
     <string name="minutes">Minutes</string>
+    <string name="base_prompt">
+        Act as a university professor who is an expert in the specified area.
+        Objective: Generate %1$d questions on the topic "%2$s".
+        %5$s
+        General conditions:
+        - Difficulty: %3$d out of 2
+        - Estimated time per question: %4$d minutes
+        - Do not include explanations or solutions
+        - Do not copy content verbatim
+        - Vary the focus of the questions
+
+        Format and notation:
+        - If the topic is mathematical or formal, use Markdown + LaTeX
+        - The content may include rich text
+        - The result must be valid JSON
+
+        Output format:
+        Returns only JSON with the following structure:
+        [
+            {
+                "id": number,
+                "question": "string (may contain LaTeX)",
+                "answers": [
+                    {
+                        "text": "string (may contain LaTeX)",
+                        "correct": boolean
+                    }
+                ]
+            }
+        ]
+    </string>
+    <string name="text_prompt">
+        Entry:
+        Reference information is provided in text only.
+    </string>
+    <string name="text_image_prompt">
+        Input:
+        - Text: Defines the topic, difficulty, and format
+        - Image: Corresponds to an actual exam and is used only for reference
+
+        Use of the image:
+        - Analyze style, format, and level
+        - Do not copy or rephrase questions
+        - Generate new questions based on the analysis.
+    </string>
 </resources>
