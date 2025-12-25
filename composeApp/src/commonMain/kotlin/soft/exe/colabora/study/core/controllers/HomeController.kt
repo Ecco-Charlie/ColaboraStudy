@@ -18,12 +18,17 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.getString
 import soft.exe.colabora.study.core.entity.UserData
+import soft.exe.colabora.study.core.service.QuestionsService
 import soft.exe.colabora.study.core.service.UserDataService
 import soft.exe.colabora.study.core.utils.LoadState
+import soft.exe.colabora.study.ui.navigation.Lobby
 import soft.exe.colabora.study.ui.navigation.Login
 import soft.exe.colabora.study.ui.navigation.NavigationEvent
 
-class HomeController(private val udService: UserDataService) : ViewModel() {
+class HomeController(
+    private val udService: UserDataService,
+    private val questionsService: QuestionsService
+) : ViewModel() {
 
     private val _load = MutableStateFlow<LoadState>(LoadState.Load)
     val load: StateFlow<LoadState> = _load
@@ -108,6 +113,8 @@ class HomeController(private val udService: UserDataService) : ViewModel() {
                 ((_minutes.value+(_hours.value*60)) / _numOfQuestions.value.toInt()),
                 getString(type)
             )
+            _navEvent.send(NavigationEvent.NavigateTo(Lobby))
+            questionsService.loadQuestions(prompt)
         }
     }
 

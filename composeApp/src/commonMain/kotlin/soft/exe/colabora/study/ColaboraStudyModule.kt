@@ -5,8 +5,12 @@ import org.koin.core.module.dsl.singleOf
 import org.koin.core.module.dsl.viewModelOf
 import org.koin.dsl.module
 import soft.exe.colabora.study.core.controllers.HomeController
+import soft.exe.colabora.study.core.controllers.LobbyController
 import soft.exe.colabora.study.core.controllers.LoginController
+import soft.exe.colabora.study.core.repository.PlayerRegistry
 import soft.exe.colabora.study.core.repository.UserDataRepository
+import soft.exe.colabora.study.core.service.ConnectionService
+import soft.exe.colabora.study.core.service.QuestionsService
 import soft.exe.colabora.study.core.service.UserDataService
 
 val appModule = module {
@@ -15,4 +19,8 @@ val appModule = module {
     single { Settings() }
     singleOf(::UserDataRepository)
     singleOf(::UserDataService)
+    singleOf(::QuestionsService)
+    viewModelOf(::LobbyController)
+    singleOf(::ConnectionService)
+    singleOf(::PlayerRegistry)
 }
