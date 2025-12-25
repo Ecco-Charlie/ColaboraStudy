@@ -67,4 +67,9 @@
         - Do not copy or rephrase questions
         - Generate new questions based on the analysis.
     </string>
+    <string name="loading_questions">Loading questions...</string>
+    <string name="everything_ready">Everything is ready to begin.</string>
+    <string name="people_connected">People connected</string>
+    <string name="no_one_online">No one is online yet.</string>
+    <string name="start_game">Start the game</string>
 </resources>
