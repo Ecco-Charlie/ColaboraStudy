@@ -53,6 +53,7 @@ kotlin {
             implementation(libs.krop.extension.filekit)
             implementation(libs.kotlinx.datetime)
             implementation(libs.datetime.wheel.picker)
+            implementation(libs.ktor.network)
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)
