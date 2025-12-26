@@ -7,7 +7,7 @@ import kotlinx.serialization.Transient
 @Serializable
 data class UserData(
     val username: String,
-    val picturePath: String,
+    val picturePath: String? = null,
     @Transient
     var picture: ImageBitmap? = null
 )

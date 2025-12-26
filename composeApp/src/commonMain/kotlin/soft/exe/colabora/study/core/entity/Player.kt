@@ -38,7 +38,6 @@ class Player(private val connection: Socket) : MessageDecoder() {
                 val picture = message.picture.decodeToImageBitmap()
                 this.userData = UserData(
                     username = message.username,
-                    picturePath = "",
                     picture = picture
                 )
             }

@@ -21,9 +21,9 @@ class UserDataService(private val udRepository: UserDataRepository) {
     }
 
     suspend fun loadPicture() {
-        if (instance == null)
+        if (instance == null || instance!!.picturePath == null)
             throw NullPointerException()
-        val picture = PlatformFile(instance!!.picturePath).readBytes().decodeToImageBitmap()
+        val picture = PlatformFile(instance!!.picturePath!!).readBytes().decodeToImageBitmap()
         instance!!.picture = picture
     }
 
