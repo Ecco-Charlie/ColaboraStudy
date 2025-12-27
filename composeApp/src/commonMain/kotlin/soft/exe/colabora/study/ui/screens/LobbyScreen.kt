@@ -8,8 +8,9 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyHorizontalGrid
+import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
+import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
+import androidx.compose.foundation.lazy.staggeredgrid.items
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.HorizontalDivider
@@ -33,12 +34,14 @@ import colaborastudy.composeapp.generated.resources.start_game
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 import soft.exe.colabora.study.core.controllers.LobbyController
+import soft.exe.colabora.study.ui.components.PlayerOnline
 import soft.exe.colabora.study.ui.components.TitleText
 
 @Composable
 fun LobbyScreen(controller: LobbyController = koinViewModel()) {
 
     val load by controller.load.collectAsStateWithLifecycle()
+    val players by controller.players.collectAsStateWithLifecycle()
 
     Scaffold { innerPadding ->
         Column(
@@ -70,19 +73,26 @@ fun LobbyScreen(controller: LobbyController = koinViewModel()) {
                 size = 20.sp
             )
             Spacer(Modifier.height(10.dp))
-            LazyHorizontalGrid(
-                rows = GridCells.Adaptive(minSize = 148.dp),
-                modifier = Modifier.weight(1f).fillMaxWidth()
+            LazyVerticalStaggeredGrid(
+                columns = StaggeredGridCells.FixedSize(100.dp),
+                modifier = Modifier.fillMaxWidth().weight(1f)
                     .border(
                         width = 1.dp,
                         color = MaterialTheme.colorScheme.outline,
                         shape = MaterialTheme.shapes.medium
-                    ).padding(20.dp)
+                    ).padding(20.dp),
+                verticalItemSpacing = 10.dp
             ) {
-                item {
-                    Text(
-                        text = stringResource(Res.string.no_one_online)
-                    )
+                if (players.isEmpty()) {
+                    item {
+                        Text(
+                            text = stringResource(Res.string.no_one_online)
+                        )
+                    }
+                } else {
+                    items(players) {
+                        PlayerOnline(it.userData)
+                    }
                 }
             }
             Spacer(Modifier.height(10.dp))

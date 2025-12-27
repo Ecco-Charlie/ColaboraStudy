@@ -5,6 +5,8 @@ import io.ktor.network.sockets.ServerSocket
 import io.ktor.network.sockets.aSocket
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
+import kotlinx.coroutines.flow.StateFlow
+import soft.exe.colabora.study.core.entity.Player
 import soft.exe.colabora.study.core.repository.PlayerRepository
 
 class ConnectionService(private val playerRepository: PlayerRepository) {
@@ -12,6 +14,8 @@ class ConnectionService(private val playerRepository: PlayerRepository) {
     private val selectorManager = SelectorManager(Dispatchers.IO)
     private var connection: ServerSocket? = null
     private var running: Boolean = false
+
+    val players: StateFlow<List<Player>> = playerRepository.players
 
     suspend fun startServer() {
         this.connection = aSocket(selectorManager).tcp().bind("0.0.0.0", 9892)

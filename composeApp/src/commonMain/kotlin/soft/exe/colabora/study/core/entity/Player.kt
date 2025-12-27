@@ -1,5 +1,8 @@
 package soft.exe.colabora.study.core.entity
 
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.graphics.decodeToImageBitmap
 import io.ktor.network.sockets.Socket
 import io.ktor.network.sockets.openReadChannel
@@ -17,7 +20,7 @@ class Player(private val connection: Socket) : MessageDecoder() {
     private val reader = connection.openReadChannel()
     private val writer = connection.openWriteChannel(autoFlush = true)
 
-    var userData: UserData? = null
+    var userData by mutableStateOf<UserData?>(null)
         private set
 
     suspend fun listening(onClose: (Player) -> Unit) {
