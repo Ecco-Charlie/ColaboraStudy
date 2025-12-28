@@ -31,7 +31,7 @@ fun PlayerOnline(playerData: UserData?) {
         Spacer(Modifier.height(5.dp))
         Text(
             text = playerData?.username ?: "Unknow",
-            fontSize = 18.sp
+            fontSize = 15.sp
         )
     }
 }

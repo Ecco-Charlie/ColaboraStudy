@@ -11,28 +11,34 @@ import io.ktor.utils.io.readInt
 import io.ktor.utils.io.readPacket
 import io.ktor.utils.io.writeFully
 import io.ktor.utils.io.writeInt
+import kotlinx.io.IOException
 import kotlinx.io.readByteArray
+import org.koin.mp.KoinPlatform
 import soft.exe.colabora.study.core.entity.messages.ErrorMessage
 import soft.exe.colabora.study.core.entity.messages.Message
+import soft.exe.colabora.study.core.entity.messages.RegistrySuccess
 import soft.exe.colabora.study.core.entity.messages.UserDataMessage
+import soft.exe.colabora.study.core.service.UserDataService
 
-class Player(private val connection: Socket) : MessageDecoder() {
+class Player(
+    private val connection: Socket
+    ) : MessageDecoder() {
     private val reader = connection.openReadChannel()
     private val writer = connection.openWriteChannel(autoFlush = true)
 
     var userData by mutableStateOf<UserData?>(null)
         private set
 
-    suspend fun listening(onClose: (Player) -> Unit) {
+    suspend fun listening(onClose: ((Player) -> Unit)? = null) {
         while(!this.reader.isClosedForRead) {
-            val size = this.reader.readInt()
+            val size = try { this.reader.readInt() } catch(_: IOException) { break }
             if (size == -1)
                 break
             val buffer = this.reader.readPacket(size)
             val msg = this.decodeMessage(buffer.readByteArray())
             this.messageHandler(msg)
         }
-        onClose(this)
+        onClose?.invoke(this)
     }
 
     private suspend fun messageHandler(message: Message?) {
@@ -44,13 +50,17 @@ class Player(private val connection: Socket) : MessageDecoder() {
                     picture = picture
                 )
             }
+            is RegistrySuccess -> {
+                KoinPlatform.getKoin().get<UserDataService>().send(this::send)
+            }
             else -> {
-                this.send(ErrorMessage("UNKNOW_MESSAGE").encode())
+                this.send(ErrorMessage("UNKNOW_MESSAGE"))
             }
         }
     }
 
-    suspend fun send(bytes: ByteArray) {
+    suspend fun send(message: Message) {
+        val bytes = message.encode()
         this.writer.writeInt(bytes.size)
         this.writer.writeFully(bytes)
     }

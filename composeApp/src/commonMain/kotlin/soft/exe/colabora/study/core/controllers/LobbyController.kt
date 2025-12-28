@@ -2,20 +2,19 @@ package soft.exe.colabora.study.core.controllers
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import io.ktor.network.selector.SelectorManager
-import io.ktor.network.sockets.aSocket
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import soft.exe.colabora.study.core.entity.Player
+import soft.exe.colabora.study.core.service.ConnectionClient
 import soft.exe.colabora.study.core.service.ConnectionService
 import soft.exe.colabora.study.core.service.QuestionsService
 import soft.exe.colabora.study.core.utils.LoadState
 
 class LobbyController(
     private val questionsService: QuestionsService,
-    private val connectionService: ConnectionService
+    private val connectionService: ConnectionService,
+    private val connectionClient: ConnectionClient
 ) : ViewModel() {
 
     private val _load = MutableStateFlow<LoadState>(LoadState.Load)
@@ -28,6 +27,15 @@ class LobbyController(
 
     fun changeParticipation() {
         this._participate.value = !this._participate.value
+        if (this._participate.value) {
+            viewModelScope.launch {
+                connectionClient.connectToServer("127.0.0.1")
+            }
+        } else {
+            viewModelScope.launch {
+                connectionClient.closeConnection()
+            }
+        }
     }
 
     init {

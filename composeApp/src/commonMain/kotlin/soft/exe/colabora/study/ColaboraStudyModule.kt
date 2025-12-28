@@ -9,6 +9,7 @@ import soft.exe.colabora.study.core.controllers.LobbyController
 import soft.exe.colabora.study.core.controllers.LoginController
 import soft.exe.colabora.study.core.repository.PlayerRepository
 import soft.exe.colabora.study.core.repository.UserDataRepository
+import soft.exe.colabora.study.core.service.ConnectionClient
 import soft.exe.colabora.study.core.service.ConnectionService
 import soft.exe.colabora.study.core.service.QuestionsService
 import soft.exe.colabora.study.core.service.UserDataService
@@ -23,4 +24,5 @@ val appModule = module {
     viewModelOf(::LobbyController)
     singleOf(::ConnectionService)
     singleOf(::PlayerRepository)
+    singleOf(::ConnectionClient)
 }

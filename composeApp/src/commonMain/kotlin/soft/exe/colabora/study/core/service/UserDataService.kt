@@ -1,10 +1,13 @@
 package soft.exe.colabora.study.core.service
 
 import androidx.compose.ui.graphics.decodeToImageBitmap
+import com.attafitamim.krop.filekit.encodeToByteArray
 import io.github.vinceglb.filekit.PlatformFile
 import io.github.vinceglb.filekit.readBytes
 import kotlinx.serialization.json.Json
 import soft.exe.colabora.study.core.entity.UserData
+import soft.exe.colabora.study.core.entity.messages.Message
+import soft.exe.colabora.study.core.entity.messages.UserDataMessage
 import soft.exe.colabora.study.core.repository.UserDataRepository
 
 class UserDataService(private val udRepository: UserDataRepository) {
@@ -31,6 +34,11 @@ class UserDataService(private val udRepository: UserDataRepository) {
         val udJson = Json.encodeToString(ud)
         udRepository.saveUserDataJson(udJson)
         this.instance = ud
+    }
+
+    suspend fun send(sender: suspend (Message) -> Unit) {
+        require(this.instance != null && this.instance!!.picture != null)
+        sender(UserDataMessage(this.instance!!.username, this.instance!!.picture!!.encodeToByteArray()))
     }
 
 }
