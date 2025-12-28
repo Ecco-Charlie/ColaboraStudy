@@ -1,6 +1,7 @@
 package soft.exe.colabora.study.ui.screens
 
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -12,9 +13,11 @@ import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
 import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
 import androidx.compose.foundation.lazy.staggeredgrid.items
 import androidx.compose.material3.Button
+import androidx.compose.material3.Checkbox
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -29,6 +32,7 @@ import colaborastudy.composeapp.generated.resources.Res
 import colaborastudy.composeapp.generated.resources.everything_ready
 import colaborastudy.composeapp.generated.resources.loading_questions
 import colaborastudy.composeapp.generated.resources.no_one_online
+import colaborastudy.composeapp.generated.resources.participate_exam
 import colaborastudy.composeapp.generated.resources.people_connected
 import colaborastudy.composeapp.generated.resources.start_game
 import org.jetbrains.compose.resources.stringResource
@@ -42,6 +46,7 @@ fun LobbyScreen(controller: LobbyController = koinViewModel()) {
 
     val load by controller.load.collectAsStateWithLifecycle()
     val players by controller.players.collectAsStateWithLifecycle()
+    val participate by controller.participate.collectAsStateWithLifecycle()
 
     Scaffold { innerPadding ->
         Column(
@@ -68,10 +73,24 @@ fun LobbyScreen(controller: LobbyController = koinViewModel()) {
             Spacer(Modifier.height(20.dp))
             HorizontalDivider()
             Spacer(Modifier.height(20.dp))
-            TitleText(
-                text = stringResource(Res.string.people_connected),
-                size = 20.sp
-            )
+            Row(
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                TitleText(
+                    text = stringResource(Res.string.people_connected),
+                    size = 20.sp
+                )
+                Spacer(Modifier.weight(1f))
+                Checkbox(
+                    checked = participate,
+                    onCheckedChange = { controller.changeParticipation() },
+                    modifier = Modifier.height(40.dp)
+                )
+                Text(
+                    text = stringResource(Res.string.participate_exam),
+                    modifier = Modifier.clickable(onClick = controller::changeParticipation)
+                )
+            }
             Spacer(Modifier.height(10.dp))
             LazyVerticalStaggeredGrid(
                 columns = StaggeredGridCells.FixedSize(100.dp),

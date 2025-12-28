@@ -2,6 +2,9 @@ package soft.exe.colabora.study.core.controllers
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import io.ktor.network.selector.SelectorManager
+import io.ktor.network.sockets.aSocket
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
@@ -19,6 +22,13 @@ class LobbyController(
     val load: StateFlow<LoadState> = _load
 
     val players: StateFlow<List<Player>> = connectionService.players
+
+    private val _participate = MutableStateFlow(false)
+    val participate: StateFlow<Boolean> = _participate
+
+    fun changeParticipation() {
+        this._participate.value = !this._participate.value
+    }
 
     init {
         viewModelScope.launch {
