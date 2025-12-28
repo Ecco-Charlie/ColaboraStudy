@@ -9,8 +9,6 @@ import io.ktor.network.sockets.openReadChannel
 import io.ktor.network.sockets.openWriteChannel
 import io.ktor.utils.io.readInt
 import io.ktor.utils.io.readPacket
-import io.ktor.utils.io.writeFully
-import io.ktor.utils.io.writeInt
 import kotlinx.io.IOException
 import kotlinx.io.readByteArray
 import org.koin.mp.KoinPlatform
@@ -24,7 +22,7 @@ class Player(
     private val connection: Socket
     ) : MessageDecoder() {
     private val reader = connection.openReadChannel()
-    private val writer = connection.openWriteChannel(autoFlush = true)
+    override val writer = connection.openWriteChannel(autoFlush = true)
 
     var userData by mutableStateOf<UserData?>(null)
         private set
@@ -57,12 +55,6 @@ class Player(
                 this.send(ErrorMessage("UNKNOW_MESSAGE"))
             }
         }
-    }
-
-    suspend fun send(message: Message) {
-        val bytes = message.encode()
-        this.writer.writeInt(bytes.size)
-        this.writer.writeFully(bytes)
     }
 
     fun close() {
