@@ -2,11 +2,14 @@ package soft.exe.colabora.study.core.controllers
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.IO
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import soft.exe.colabora.study.core.entity.Player
 import soft.exe.colabora.study.core.service.ConnectionClient
 import soft.exe.colabora.study.core.service.ConnectionService
@@ -36,7 +39,9 @@ class LobbyController(
         this._participate.value = !this._participate.value
         if (this._participate.value) {
             viewModelScope.launch {
-                connectionClient.connectToServer("127.0.0.1")
+                withContext(Dispatchers.IO) {
+                    connectionClient.connectToServer("127.0.0.1")
+                }
             }
         } else {
             viewModelScope.launch {
