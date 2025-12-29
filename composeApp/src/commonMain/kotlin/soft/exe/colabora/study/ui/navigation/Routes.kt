@@ -10,3 +10,6 @@ object Login
 
 @Serializable
 object Lobby
+
+@Serializable
+object Exam

@@ -5,6 +5,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import soft.exe.colabora.study.ui.screens.ExamScreen
 import soft.exe.colabora.study.ui.screens.HomeScreen
 import soft.exe.colabora.study.ui.screens.LobbyScreen
 import soft.exe.colabora.study.ui.screens.LoginScreen
@@ -21,7 +22,10 @@ fun NavigationWrapper() {
             LoginScreen { navigateHandle(navController, it) }
         }
         composable<Lobby> {
-            LobbyScreen()
+            LobbyScreen { navigateHandle(navController, it) }
+        }
+        composable<Exam> {
+            ExamScreen()
         }
     }
 

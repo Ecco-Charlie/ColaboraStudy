@@ -20,6 +20,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -39,13 +40,21 @@ import org.koin.compose.viewmodel.koinViewModel
 import soft.exe.colabora.study.core.controllers.LobbyController
 import soft.exe.colabora.study.ui.components.PlayerOnline
 import soft.exe.colabora.study.ui.components.TitleText
+import soft.exe.colabora.study.ui.navigation.NavigationEvent
 
 @Composable
-fun LobbyScreen(controller: LobbyController = koinViewModel()) {
+fun LobbyScreen(
+    controller: LobbyController = koinViewModel(),
+    onNavigate: (NavigationEvent) -> Unit
+) {
 
     val load by controller.load.collectAsStateWithLifecycle()
     val players by controller.players.collectAsStateWithLifecycle()
     val participate by controller.participate.collectAsStateWithLifecycle()
+
+    LaunchedEffect(true) {
+        controller.navEvent.collect { onNavigate(it) }
+    }
 
     Scaffold { innerPadding ->
         Column(
@@ -117,7 +126,8 @@ fun LobbyScreen(controller: LobbyController = koinViewModel()) {
             Button(
                 onClick = controller::startGame,
                 modifier = Modifier.fillMaxWidth(),
-                shape = MaterialTheme.shapes.medium
+                shape = MaterialTheme.shapes.medium,
+                enabled = !load.isLoad
             ) {
                 Text(
                     text = stringResource(Res.string.start_game)
