@@ -11,18 +11,32 @@ class QuestionsService {
     private val _questions = MutableStateFlow<List<Question>>(listOf())
     val questions: StateFlow<List<Question>> = _questions
 
+    fun getQuestion(index: Int): Question {
+        return this._questions.value[index]
+    }
+
     suspend fun loadQuestions(prompt: String) {
         delay(5000)
         this._questions.value = listOf(
             Question(
                 id = 1,
-                question = "",
+                question = "Why the sky is blue?",
                 answers = listOf(
                     Answer(
-                        id = 1,
-                        text = "",
+                        id = 0,
+                        text = "Because yes",
                         correct = false
-                    )
+                    ),
+                    Answer(
+                        id = 1,
+                        text = "Because reflects the ocean",
+                        correct = true
+                    ),
+                    Answer(
+                        id = 2,
+                        text = "Why not?",
+                        correct = false
+                    ),
                 )
             )
         )

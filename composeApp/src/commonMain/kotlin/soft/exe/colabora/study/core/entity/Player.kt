@@ -14,6 +14,7 @@ import kotlinx.io.readByteArray
 import org.koin.mp.KoinPlatform
 import soft.exe.colabora.study.core.entity.messages.ErrorMessage
 import soft.exe.colabora.study.core.entity.messages.Message
+import soft.exe.colabora.study.core.entity.messages.QuestionMessage
 import soft.exe.colabora.study.core.entity.messages.RegistrySuccess
 import soft.exe.colabora.study.core.entity.messages.RequestQuestion
 import soft.exe.colabora.study.core.entity.messages.StartGameMessage
@@ -34,6 +35,11 @@ class Player(
         private set
 
     private var questionsClient: QuestionsClient? = null
+
+    private var questionsService: QuestionsService? = null
+
+    var currentQuestion: Question? = null
+    var numOfQuestions: Int? = null
 
     suspend fun listening(onClose: ((Player) -> Unit)? = null) {
         while(!this.reader.isClosedForRead) {
@@ -60,11 +66,18 @@ class Player(
                 koin.get<UserDataService>().send(this::send)
             }
             is StartGameMessage -> {
-                questionsClient = QuestionsClient(message.numOfQuestions)
+                this.numOfQuestions = message.numOfQuestions
+                questionsClient = QuestionsClient(this.numOfQuestions!!)
                 this.requestQuestion()
             }
             is RequestQuestion -> {
-                val questionsService: QuestionsService = koin.get()
+                if (this.questionsService == null)
+                    this.questionsService = koin.get<QuestionsService>()
+                val question = this.questionsService!!.getQuestion(message.questionId)
+                this.send(QuestionMessage(question))
+            }
+            is QuestionMessage -> {
+                this.currentQuestion = message.question
             }
             else -> {
                 this.send(ErrorMessage("UNKNOW_MESSAGE"))
@@ -76,7 +89,7 @@ class Player(
         this.connection.close()
     }
 
-    suspend fun requestQuestion() {
+    private suspend fun requestQuestion() {
         require(this.questionsClient != null)
         val qid = this.questionsClient!!.nextQuestion()
         this.send(RequestQuestion(qid))

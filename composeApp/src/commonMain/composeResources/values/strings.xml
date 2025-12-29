@@ -73,4 +73,5 @@
     <string name="no_one_online">No one is online yet.</string>
     <string name="start_game">Start the game</string>
     <string name="participate_exam">Participate in the exam</string>
+    <string name="exam">Exam</string>
 </resources>

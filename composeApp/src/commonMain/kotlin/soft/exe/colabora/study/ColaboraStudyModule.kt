@@ -4,6 +4,7 @@ import com.russhwolf.settings.Settings
 import org.koin.core.module.dsl.singleOf
 import org.koin.core.module.dsl.viewModelOf
 import org.koin.dsl.module
+import soft.exe.colabora.study.core.controllers.ExamController
 import soft.exe.colabora.study.core.controllers.HomeController
 import soft.exe.colabora.study.core.controllers.LobbyController
 import soft.exe.colabora.study.core.controllers.LoginController
@@ -25,4 +26,5 @@ val appModule = module {
     singleOf(::ConnectionService)
     singleOf(::PlayerRepository)
     singleOf(::ConnectionClient)
+    viewModelOf(::ExamController)
 }

@@ -7,6 +7,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import soft.exe.colabora.study.core.entity.Player
+import soft.exe.colabora.study.core.entity.Question
 
 class ConnectionClient(
     private val userDataService: UserDataService
@@ -26,6 +27,14 @@ class ConnectionClient(
 
     fun closeConnection() {
         this.player?.close()
+    }
+
+    fun nextQuestion(): Question? {
+        return player?.currentQuestion
+    }
+
+    fun numOfQuestions(): Int {
+        return this.player?.numOfQuestions ?: 0
     }
 
 }

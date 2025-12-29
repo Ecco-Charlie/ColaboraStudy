@@ -1,12 +1,11 @@
 package soft.exe.colabora.study.core.service
 
-class QuestionsClient(private val numOfQuestions: Int) {
-
-    private var currentQuestion: Int = -1
+class QuestionsClient(val numOfQuestions: Int) {
+    private var currentIndexQuestion: Int = -1
 
     fun nextQuestion(): Int {
-        this.currentQuestion += 1
-        return this.currentQuestion
+        this.currentIndexQuestion += 1
+        return this.currentIndexQuestion
     }
 
 }
