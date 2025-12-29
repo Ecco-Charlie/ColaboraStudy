@@ -8,6 +8,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import soft.exe.colabora.study.core.entity.Player
+import soft.exe.colabora.study.core.entity.messages.Message
 import soft.exe.colabora.study.core.entity.messages.RegistrySuccess
 
 class PlayerRepository {
@@ -33,6 +34,10 @@ class PlayerRepository {
         this._players.update {
             it - player
         }
+    }
+
+    suspend fun sendToAll(message: Message) {
+        this._players.value.forEach { it.send(message) }
     }
 
 }

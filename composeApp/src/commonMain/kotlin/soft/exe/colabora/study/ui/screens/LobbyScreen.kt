@@ -115,7 +115,7 @@ fun LobbyScreen(controller: LobbyController = koinViewModel()) {
             }
             Spacer(Modifier.height(10.dp))
             Button(
-                onClick = {},
+                onClick = controller::startGame,
                 modifier = Modifier.fillMaxWidth(),
                 shape = MaterialTheme.shapes.medium
             ) {

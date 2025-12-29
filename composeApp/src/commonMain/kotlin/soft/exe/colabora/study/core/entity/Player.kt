@@ -15,7 +15,11 @@ import org.koin.mp.KoinPlatform
 import soft.exe.colabora.study.core.entity.messages.ErrorMessage
 import soft.exe.colabora.study.core.entity.messages.Message
 import soft.exe.colabora.study.core.entity.messages.RegistrySuccess
+import soft.exe.colabora.study.core.entity.messages.RequestQuestion
+import soft.exe.colabora.study.core.entity.messages.StartGameMessage
 import soft.exe.colabora.study.core.entity.messages.UserDataMessage
+import soft.exe.colabora.study.core.service.QuestionsClient
+import soft.exe.colabora.study.core.service.QuestionsService
 import soft.exe.colabora.study.core.service.UserDataService
 
 class Player(
@@ -24,8 +28,12 @@ class Player(
     private val reader = connection.openReadChannel()
     override val writer = connection.openWriteChannel(autoFlush = true)
 
+    private val koin = KoinPlatform.getKoin()
+
     var userData by mutableStateOf<UserData?>(null)
         private set
+
+    private var questionsClient: QuestionsClient? = null
 
     suspend fun listening(onClose: ((Player) -> Unit)? = null) {
         while(!this.reader.isClosedForRead) {
@@ -49,7 +57,14 @@ class Player(
                 )
             }
             is RegistrySuccess -> {
-                KoinPlatform.getKoin().get<UserDataService>().send(this::send)
+                koin.get<UserDataService>().send(this::send)
+            }
+            is StartGameMessage -> {
+                questionsClient = QuestionsClient(message.numOfQuestions)
+                this.requestQuestion()
+            }
+            is RequestQuestion -> {
+                val questionsService: QuestionsService = koin.get()
             }
             else -> {
                 this.send(ErrorMessage("UNKNOW_MESSAGE"))
@@ -59,6 +74,12 @@ class Player(
 
     fun close() {
         this.connection.close()
+    }
+
+    suspend fun requestQuestion() {
+        require(this.questionsClient != null)
+        val qid = this.questionsClient!!.nextQuestion()
+        this.send(RequestQuestion(qid))
     }
 
 }

@@ -51,4 +51,13 @@ class LobbyController(
         }
     }
 
+    fun startGame() {
+        val numOfQuestions = this.questionsService.questions.value.size
+        if (this.players.value.isEmpty() || numOfQuestions == 0)
+            return
+        viewModelScope.launch {
+            connectionService.startGame(numOfQuestions)
+        }
+    }
+
 }

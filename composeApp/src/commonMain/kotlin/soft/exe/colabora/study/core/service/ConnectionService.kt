@@ -7,6 +7,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
 import kotlinx.coroutines.flow.StateFlow
 import soft.exe.colabora.study.core.entity.Player
+import soft.exe.colabora.study.core.entity.messages.StartGameMessage
 import soft.exe.colabora.study.core.repository.PlayerRepository
 
 class ConnectionService(private val playerRepository: PlayerRepository) {
@@ -30,6 +31,10 @@ class ConnectionService(private val playerRepository: PlayerRepository) {
             val client = this.connection!!.accept()
             playerRepository.register(client)
         }
+    }
+
+    suspend fun startGame(numOfQuestions: Int) {
+        playerRepository.sendToAll(StartGameMessage(numOfQuestions))
     }
 
 }
