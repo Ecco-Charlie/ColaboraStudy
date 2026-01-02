@@ -16,6 +16,8 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import colaborastudy.composeapp.generated.resources.Res
 import colaborastudy.composeapp.generated.resources.exam
+import com.multiplatform.webview.web.WebView
+import com.multiplatform.webview.web.rememberWebViewState
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 import soft.exe.colabora.study.core.controllers.ExamController
@@ -26,11 +28,12 @@ fun ExamScreen(controller: ExamController = koinViewModel()) {
 
     val load by controller.load.collectAsStateWithLifecycle()
     val question by controller.question.collectAsStateWithLifecycle()
-
+    val state = rememberWebViewState("https://github.com")
     Scaffold { innerPadding ->
         Column(
             modifier = Modifier.padding(innerPadding).padding(vertical = 20.dp, horizontal = 40.dp)
         ) {
+            WebView(state)
             TitleText(
                 text = stringResource(Res.string.exam)
             )

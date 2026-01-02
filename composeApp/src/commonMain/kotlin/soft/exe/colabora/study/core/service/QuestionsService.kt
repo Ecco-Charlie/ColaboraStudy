@@ -16,7 +16,6 @@ class QuestionsService {
     }
 
     suspend fun loadQuestions(prompt: String) {
-        delay(5000)
         this._questions.value = listOf(
             Question(
                 id = 1,

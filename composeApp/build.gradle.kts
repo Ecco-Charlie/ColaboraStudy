@@ -54,6 +54,7 @@ kotlin {
             implementation(libs.kotlinx.datetime)
             implementation(libs.datetime.wheel.picker)
             implementation(libs.ktor.network)
+            api("io.github.kevinnzou:compose-webview-multiplatform:1.6.0")
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)
@@ -104,6 +105,20 @@ compose.desktop {
             targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
             packageName = "soft.exe.colabora.study"
             packageVersion = "1.0.0"
+            includeAllModules = true
+        }
+    }
+}
+
+afterEvaluate {
+    tasks.withType<JavaExec> {
+        jvmArgs("--add-opens", "java.desktop/sun.awt=ALL-UNNAMED")
+        jvmArgs("--add-opens", "java.desktop/java.awt.peer=ALL-UNNAMED")
+
+        if (System.getProperty("os.name").contains("Mac")) {
+            jvmArgs("--add-opens", "java.desktop/sun.awt=ALL-UNNAMED")
+            jvmArgs("--add-opens", "java.desktop/sun.lwawt=ALL-UNNAMED")
+            jvmArgs("--add-opens", "java.desktop/sun.lwawt.macosx=ALL-UNNAMED")
         }
     }
 }
