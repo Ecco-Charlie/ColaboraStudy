@@ -34,7 +34,7 @@
         - Vary the focus of the questions
 
         Format and notation:
-        - If the topic is mathematical or formal, use Markdown + LaTeX
+        - If the topic is mathematical or formal, use Markdown
         - The content may include rich text
         - The result must be valid JSON
 
@@ -43,10 +43,10 @@
         [
             {
                 "id": number,
-                "question": "string (may contain LaTeX)",
+                "question": "string (may contain Markdown)",
                 "answers": [
                     {
-                        "text": "string (may contain LaTeX)",
+                        "text": "string (may contain Markdown)",
                         "correct": boolean
                     }
                 ]
