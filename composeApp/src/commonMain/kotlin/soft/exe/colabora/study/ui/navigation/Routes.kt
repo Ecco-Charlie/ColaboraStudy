@@ -13,3 +13,6 @@ object Lobby
 
 @Serializable
 object Exam
+
+@Serializable
+object WaitResults

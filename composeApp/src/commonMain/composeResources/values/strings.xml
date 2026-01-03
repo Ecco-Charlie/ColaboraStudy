@@ -74,4 +74,5 @@
     <string name="start_game">Start the game</string>
     <string name="participate_exam">Participate in the exam</string>
     <string name="exam">Exam</string>
+    <string name="waiting_results">Waiting for results...</string>
 </resources>

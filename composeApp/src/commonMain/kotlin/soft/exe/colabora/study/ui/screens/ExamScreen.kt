@@ -18,6 +18,7 @@ import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -33,12 +34,20 @@ import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 import soft.exe.colabora.study.core.controllers.ExamController
 import soft.exe.colabora.study.ui.components.TitleText
+import soft.exe.colabora.study.ui.navigation.NavigationEvent
 
 @Composable
-fun ExamScreen(controller: ExamController = koinViewModel()) {
+fun ExamScreen(
+    controller: ExamController = koinViewModel(),
+    onNavigate: (NavigationEvent) -> Unit
+) {
 
     val question by controller.currentQuestion.collectAsStateWithLifecycle()
     val answerSelected by controller.selectedAnswer.collectAsStateWithLifecycle()
+
+    LaunchedEffect(true) {
+        controller.navEvent.collect { onNavigate(it) }
+    }
 
     Scaffold { innerPadding ->
         Column(

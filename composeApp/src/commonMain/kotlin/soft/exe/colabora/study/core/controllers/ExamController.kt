@@ -2,11 +2,16 @@ package soft.exe.colabora.study.core.controllers
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import soft.exe.colabora.study.core.entity.Question
 import soft.exe.colabora.study.core.service.ConnectionClient
+import soft.exe.colabora.study.ui.navigation.NavigationEvent
+import soft.exe.colabora.study.ui.navigation.WaitResults
 
 class ExamController(private val connectionClient: ConnectionClient) : ViewModel() {
 
@@ -17,6 +22,9 @@ class ExamController(private val connectionClient: ConnectionClient) : ViewModel
     private val _selectedAnswer = MutableStateFlow<Int?>(null)
     val selectedAnswer: StateFlow<Int?> = _selectedAnswer
 
+    private val _navEvent: Channel<NavigationEvent> = Channel()
+    val navEvent: Flow<NavigationEvent> = _navEvent.receiveAsFlow()
+
     fun changeSelectedAnswer(value: Int) {
         this._selectedAnswer.value = value
     }
@@ -25,7 +33,7 @@ class ExamController(private val connectionClient: ConnectionClient) : ViewModel
         viewModelScope.launch {
             connectionClient.nextQuestion()
             connectionClient.finish.collect {
-                TODO()
+                _navEvent.send(NavigationEvent.NavigateToAndClear(WaitResults))
             }
         }
     }
@@ -37,6 +45,7 @@ class ExamController(private val connectionClient: ConnectionClient) : ViewModel
             questionId = this.currentQuestion.value!!.id,
             answerId = this._selectedAnswer.value!!
         )
+        this._selectedAnswer.value = null
         viewModelScope.launch {
             connectionClient.nextQuestion()
         }
