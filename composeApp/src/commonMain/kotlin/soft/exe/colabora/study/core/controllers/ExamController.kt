@@ -23,11 +23,20 @@ class ExamController(private val connectionClient: ConnectionClient) : ViewModel
 
     init {
         viewModelScope.launch {
-            nextQuestion()
+            connectionClient.nextQuestion()
+            connectionClient.finish.collect {
+                TODO()
+            }
         }
     }
 
     fun nextQuestion() {
+        if (this.currentQuestion.value == null || this._selectedAnswer.value == null)
+            return
+        this.connectionClient.registerQuestionAnswer(
+            questionId = this.currentQuestion.value!!.id,
+            answerId = this._selectedAnswer.value!!
+        )
         viewModelScope.launch {
             connectionClient.nextQuestion()
         }

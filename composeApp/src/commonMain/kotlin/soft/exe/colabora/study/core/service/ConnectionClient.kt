@@ -5,10 +5,12 @@ import io.ktor.network.sockets.Socket
 import io.ktor.network.sockets.aSocket
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import soft.exe.colabora.study.core.entity.ClientPlayer
 import soft.exe.colabora.study.core.entity.Question
+import soft.exe.colabora.study.core.entity.QuestionAnswer
 
 class ConnectionClient(
     private val userDataService: UserDataService
@@ -20,6 +22,8 @@ class ConnectionClient(
 
     lateinit var currentQuestion: StateFlow<Question?>
 
+    lateinit var finish: Flow<Boolean>
+
     suspend fun connectToServer(ip: String) {
         val con: Socket = aSocket(selectorManager).tcp().connect(ip, 9892)
         this.player = ClientPlayer(con)
@@ -27,6 +31,7 @@ class ConnectionClient(
             player?.listening {it.close()}
         }
         this.currentQuestion = player!!.currentQuestion
+        this.finish = player!!.finish
     }
 
     fun closeConnection() {
@@ -39,6 +44,10 @@ class ConnectionClient(
 
     fun numOfQuestions(): Int {
         return this.player?.numOfQuestions ?: 0
+    }
+
+    fun registerQuestionAnswer(questionId: Int, answerId: Int) {
+        this.player?.addQuestionAnswer(QuestionAnswer(questionId, answerId))
     }
 
 }
