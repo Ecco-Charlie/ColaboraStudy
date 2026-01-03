@@ -7,17 +7,12 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import soft.exe.colabora.study.core.entity.Question
 import soft.exe.colabora.study.core.service.ConnectionClient
-import soft.exe.colabora.study.core.utils.LoadState
 
 class ExamController(private val connectionClient: ConnectionClient) : ViewModel() {
 
-    private val _load = MutableStateFlow<LoadState>(LoadState.Load)
-    val load: StateFlow<LoadState> = _load
-
-    private val _question = MutableStateFlow<Question?>(null)
-    val question: StateFlow<Question?> = _question
-
     val numOfQuestions: Int = this.connectionClient.numOfQuestions()
+
+    val currentQuestion: StateFlow<Question?> = connectionClient.currentQuestion
 
     private val _selectedAnswer = MutableStateFlow<Int?>(null)
     val selectedAnswer: StateFlow<Int?> = _selectedAnswer
@@ -32,8 +27,10 @@ class ExamController(private val connectionClient: ConnectionClient) : ViewModel
         }
     }
 
-    suspend fun nextQuestion() {
-        this._question.value = this.connectionClient.nextQuestion()
+    fun nextQuestion() {
+        viewModelScope.launch {
+            connectionClient.nextQuestion()
+        }
     }
 
 }

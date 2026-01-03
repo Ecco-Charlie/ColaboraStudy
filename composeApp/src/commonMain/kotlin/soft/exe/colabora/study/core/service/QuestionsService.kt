@@ -1,6 +1,5 @@
 package soft.exe.colabora.study.core.service
 
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import soft.exe.colabora.study.core.entity.Answer

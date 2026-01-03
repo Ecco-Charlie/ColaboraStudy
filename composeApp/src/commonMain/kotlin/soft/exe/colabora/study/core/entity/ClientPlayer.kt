@@ -1,11 +1,8 @@
 package soft.exe.colabora.study.core.entity
 
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
-import androidx.compose.ui.graphics.decodeToImageBitmap
 import io.ktor.network.sockets.Socket
-import org.koin.core.Koin
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import org.koin.mp.KoinPlatform
 import soft.exe.colabora.study.core.entity.messages.ErrorMessage
 import soft.exe.colabora.study.core.entity.messages.Message
@@ -13,32 +10,27 @@ import soft.exe.colabora.study.core.entity.messages.QuestionMessage
 import soft.exe.colabora.study.core.entity.messages.RegistrySuccess
 import soft.exe.colabora.study.core.entity.messages.RequestQuestion
 import soft.exe.colabora.study.core.entity.messages.StartGameMessage
-import soft.exe.colabora.study.core.entity.messages.UserDataMessage
-import soft.exe.colabora.study.core.service.QuestionsClient
-import soft.exe.colabora.study.core.service.QuestionsService
 import soft.exe.colabora.study.core.service.UserDataService
 
 class ClientPlayer(connection: Socket) : Player(connection) {
 
-    private var userData by mutableStateOf<UserData?>(null)
+    private var currentIndexQuestion: Int = -1
 
-    private lateinit var questionsClient: QuestionsClient
-
-    private val koin: Koin = KoinPlatform.getKoin()
+    var numOfQuestions: Int = 0
+    private val _currentQuestion: MutableStateFlow<Question?> = MutableStateFlow(null)
+    var currentQuestion: StateFlow<Question?> = _currentQuestion
 
 
     override suspend fun messageHandler(message: Message?) {
         when(message) {
             is RegistrySuccess -> {
-                koin.get<UserDataService>().send(this::send)
+                KoinPlatform.getKoin().get<UserDataService>().send(this::send)
             }
             is StartGameMessage -> {
                 this.numOfQuestions = message.numOfQuestions
-                questionsClient = QuestionsClient(this.numOfQuestions!!)
-                this.requestQuestion()
             }
             is QuestionMessage -> {
-                this.currentQuestion = message.question
+                this._currentQuestion.value = message.question
             }
             else -> {
                 this.send(ErrorMessage("UNKNOW_MESSAGE"))
@@ -46,10 +38,10 @@ class ClientPlayer(connection: Socket) : Player(connection) {
         }
     }
 
-    private suspend fun requestQuestion() {
-        require(this.questionsClient != null)
-        val qid = this.questionsClient!!.nextQuestion()
-        this.send(RequestQuestion(qid))
+    suspend fun requestQuestion() {
+        this.currentIndexQuestion += 1
+        this._currentQuestion.value = null
+        this.send(RequestQuestion(this.currentIndexQuestion))
     }
 
 }

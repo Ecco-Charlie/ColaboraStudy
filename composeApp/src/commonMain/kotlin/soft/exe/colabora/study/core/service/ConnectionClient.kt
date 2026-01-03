@@ -5,9 +5,9 @@ import io.ktor.network.sockets.Socket
 import io.ktor.network.sockets.aSocket
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import soft.exe.colabora.study.core.entity.ClientPlayer
-import soft.exe.colabora.study.core.entity.Player
 import soft.exe.colabora.study.core.entity.Question
 
 class ConnectionClient(
@@ -16,7 +16,9 @@ class ConnectionClient(
 
     private val selectorManager = SelectorManager(Dispatchers.Unconfined)
     private val scope = CoroutineScope(Dispatchers.Unconfined)
-    private var player: Player? = null
+    private var player: ClientPlayer? = null
+
+    lateinit var currentQuestion: StateFlow<Question?>
 
     suspend fun connectToServer(ip: String) {
         val con: Socket = aSocket(selectorManager).tcp().connect(ip, 9892)
@@ -24,14 +26,15 @@ class ConnectionClient(
         scope.launch {
             player?.listening {it.close()}
         }
+        this.currentQuestion = player!!.currentQuestion
     }
 
     fun closeConnection() {
         this.player?.close()
     }
 
-    fun nextQuestion(): Question? {
-        return player?.currentQuestion
+    suspend fun nextQuestion() {
+        player?.requestQuestion()
     }
 
     fun numOfQuestions(): Int {

@@ -10,7 +10,6 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import soft.exe.colabora.study.core.entity.Player
 import soft.exe.colabora.study.core.entity.ServerPlayer
 import soft.exe.colabora.study.core.service.ConnectionClient
 import soft.exe.colabora.study.core.service.ConnectionService

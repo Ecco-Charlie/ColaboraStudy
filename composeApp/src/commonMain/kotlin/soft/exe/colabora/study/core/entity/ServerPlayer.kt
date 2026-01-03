@@ -9,13 +9,9 @@ import org.koin.mp.KoinPlatform
 import soft.exe.colabora.study.core.entity.messages.ErrorMessage
 import soft.exe.colabora.study.core.entity.messages.Message
 import soft.exe.colabora.study.core.entity.messages.QuestionMessage
-import soft.exe.colabora.study.core.entity.messages.RegistrySuccess
 import soft.exe.colabora.study.core.entity.messages.RequestQuestion
-import soft.exe.colabora.study.core.entity.messages.StartGameMessage
 import soft.exe.colabora.study.core.entity.messages.UserDataMessage
-import soft.exe.colabora.study.core.service.QuestionsClient
 import soft.exe.colabora.study.core.service.QuestionsService
-import soft.exe.colabora.study.core.service.UserDataService
 
 class ServerPlayer(connection: Socket) : Player(connection) {
 
@@ -33,7 +29,8 @@ class ServerPlayer(connection: Socket) : Player(connection) {
                 )
             }
             is RequestQuestion -> {
-                val question = this.questionsService!!.getQuestion(message.questionId)
+                val question = this.questionsService.getQuestion(message.questionId)
+                this.send(QuestionMessage(question))
             }
             else -> {
                 this.send(ErrorMessage("UNKNOW_MESSAGE"))
