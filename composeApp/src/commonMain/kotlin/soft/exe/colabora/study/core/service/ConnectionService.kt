@@ -6,17 +6,17 @@ import io.ktor.network.sockets.aSocket
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
 import kotlinx.coroutines.flow.StateFlow
-import soft.exe.colabora.study.core.entity.Player
+import soft.exe.colabora.study.core.entity.ServerPlayer
 import soft.exe.colabora.study.core.entity.messages.StartGameMessage
-import soft.exe.colabora.study.core.repository.PlayerRepository
+import soft.exe.colabora.study.core.repository.PlayerServerRepository
 
-class ConnectionService(private val playerRepository: PlayerRepository) {
+class ConnectionService(private val playerServerRepository: PlayerServerRepository) {
 
     private val selectorManager = SelectorManager(Dispatchers.IO)
     private var connection: ServerSocket? = null
     private var running: Boolean = false
 
-    val players: StateFlow<List<Player>> = playerRepository.players
+    val players: StateFlow<List<ServerPlayer>> = playerServerRepository.players
 
     suspend fun startServer() {
         this.connection = aSocket(selectorManager).tcp().bind("0.0.0.0", 9892)
@@ -29,12 +29,12 @@ class ConnectionService(private val playerRepository: PlayerRepository) {
             throw Exception("The Server Socket is not defined or not running")
         while(this.connection != null && this.running) {
             val client = this.connection!!.accept()
-            playerRepository.register(client)
+            playerServerRepository.register(client)
         }
     }
 
     suspend fun startGame(numOfQuestions: Int) {
-        playerRepository.sendToAll(StartGameMessage(numOfQuestions))
+        playerServerRepository.sendToAll(StartGameMessage(numOfQuestions))
     }
 
 }

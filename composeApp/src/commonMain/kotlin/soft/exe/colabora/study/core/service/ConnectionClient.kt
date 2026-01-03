@@ -6,6 +6,7 @@ import io.ktor.network.sockets.aSocket
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import soft.exe.colabora.study.core.entity.ClientPlayer
 import soft.exe.colabora.study.core.entity.Player
 import soft.exe.colabora.study.core.entity.Question
 
@@ -19,7 +20,7 @@ class ConnectionClient(
 
     suspend fun connectToServer(ip: String) {
         val con: Socket = aSocket(selectorManager).tcp().connect(ip, 9892)
-        this.player = Player(con)
+        this.player = ClientPlayer(con)
         scope.launch {
             player?.listening {it.close()}
         }

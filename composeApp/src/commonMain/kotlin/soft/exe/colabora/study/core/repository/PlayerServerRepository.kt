@@ -8,18 +8,19 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import soft.exe.colabora.study.core.entity.Player
+import soft.exe.colabora.study.core.entity.ServerPlayer
 import soft.exe.colabora.study.core.entity.messages.Message
 import soft.exe.colabora.study.core.entity.messages.RegistrySuccess
 
-class PlayerRepository {
+class PlayerServerRepository {
 
-    private val _players = MutableStateFlow<List<Player>>(emptyList())
-    val players: StateFlow<List<Player>> = _players
+    private val _players = MutableStateFlow<List<ServerPlayer>>(emptyList())
+    val players: StateFlow<List<ServerPlayer>> = _players
 
     private val scope = CoroutineScope(Dispatchers.Unconfined)
 
     suspend fun register(connection: Socket) {
-        val player = Player(connection)
+        val player = ServerPlayer(connection)
         this._players.update {
             it + player
         }
@@ -31,6 +32,7 @@ class PlayerRepository {
 
     fun remove(player: Player) {
         player.close()
+        player as ServerPlayer
         this._players.update {
             it - player
         }

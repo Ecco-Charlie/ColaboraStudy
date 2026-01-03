@@ -23,20 +23,12 @@ import soft.exe.colabora.study.core.service.QuestionsClient
 import soft.exe.colabora.study.core.service.QuestionsService
 import soft.exe.colabora.study.core.service.UserDataService
 
-class Player(
+abstract class Player(
     private val connection: Socket
     ) : MessageDecoder() {
     private val reader = connection.openReadChannel()
     override val writer = connection.openWriteChannel(autoFlush = true)
 
-    private val koin = KoinPlatform.getKoin()
-
-    var userData by mutableStateOf<UserData?>(null)
-        private set
-
-    private var questionsClient: QuestionsClient? = null
-
-    private var questionsService: QuestionsService? = null
 
     var currentQuestion: Question? = null
     var numOfQuestions: Int? = null
@@ -53,45 +45,10 @@ class Player(
         onClose?.invoke(this)
     }
 
-    private suspend fun messageHandler(message: Message?) {
-        when(message) {
-            is UserDataMessage -> {
-                val picture = message.picture.decodeToImageBitmap()
-                this.userData = UserData(
-                    username = message.username,
-                    picture = picture
-                )
-            }
-            is RegistrySuccess -> {
-                koin.get<UserDataService>().send(this::send)
-            }
-            is StartGameMessage -> {
-                this.numOfQuestions = message.numOfQuestions
-                questionsClient = QuestionsClient(this.numOfQuestions!!)
-                this.requestQuestion()
-            }
-            is RequestQuestion -> {
-                if (this.questionsService == null)
-                    this.questionsService = koin.get<QuestionsService>()
-                val question = this.questionsService!!.getQuestion(message.questionId)
-            }
-            is QuestionMessage -> {
-                this.currentQuestion = message.question
-            }
-            else -> {
-                this.send(ErrorMessage("UNKNOW_MESSAGE"))
-            }
-        }
-    }
+    protected abstract suspend fun messageHandler(message: Message?)
 
     fun close() {
         this.connection.close()
-    }
-
-    private suspend fun requestQuestion() {
-        require(this.questionsClient != null)
-        val qid = this.questionsClient!!.nextQuestion()
-        this.send(RequestQuestion(qid))
     }
 
 }

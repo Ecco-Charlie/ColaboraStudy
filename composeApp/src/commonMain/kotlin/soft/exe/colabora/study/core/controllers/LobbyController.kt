@@ -11,6 +11,7 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import soft.exe.colabora.study.core.entity.Player
+import soft.exe.colabora.study.core.entity.ServerPlayer
 import soft.exe.colabora.study.core.service.ConnectionClient
 import soft.exe.colabora.study.core.service.ConnectionService
 import soft.exe.colabora.study.core.service.QuestionsService
@@ -27,7 +28,7 @@ class LobbyController(
     private val _load = MutableStateFlow<LoadState>(LoadState.Load)
     val load: StateFlow<LoadState> = _load
 
-    val players: StateFlow<List<Player>> = connectionService.players
+    val players: StateFlow<List<ServerPlayer>> = connectionService.players
 
     private val _participate = MutableStateFlow(false)
     val participate: StateFlow<Boolean> = _participate
