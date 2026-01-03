@@ -4,6 +4,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import soft.exe.colabora.study.core.entity.Answer
 import soft.exe.colabora.study.core.entity.Question
+import soft.exe.colabora.study.core.entity.QuestionAnswer
 
 class QuestionsService {
 
@@ -12,6 +13,14 @@ class QuestionsService {
 
     fun getQuestion(index: Int): Question {
         return this._questions.value[index]
+    }
+
+    fun evaluateExam(questionAnswers: List<QuestionAnswer>, onFinished: (Any) -> Unit) {
+        val res = questionAnswers.map { question ->
+            val rIndexQuestion = this._questions.value.indexOfFirst { q -> q.id == question.questionId }
+            this._questions.value[rIndexQuestion].answers[question.answerId].correct
+        }
+        TODO()
     }
 
     suspend fun loadQuestions(prompt: String) {

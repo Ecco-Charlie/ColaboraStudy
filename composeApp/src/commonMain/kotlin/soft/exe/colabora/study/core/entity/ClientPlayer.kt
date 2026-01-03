@@ -8,6 +8,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import org.koin.mp.KoinPlatform
 import soft.exe.colabora.study.core.entity.messages.ErrorMessage
+import soft.exe.colabora.study.core.entity.messages.ExamFinished
 import soft.exe.colabora.study.core.entity.messages.Message
 import soft.exe.colabora.study.core.entity.messages.QuestionMessage
 import soft.exe.colabora.study.core.entity.messages.RegistrySuccess
@@ -51,6 +52,7 @@ class ClientPlayer(connection: Socket) : Player(connection) {
         this._currentQuestion.value = null
         if (this.currentIndexQuestion >= this.numOfQuestions) {
             this._finish.send(true)
+            this.send(ExamFinished(this.questionAnswers))
             return
         }
         this.send(RequestQuestion(this.currentIndexQuestion))

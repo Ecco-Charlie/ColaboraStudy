@@ -7,6 +7,7 @@ import androidx.compose.ui.graphics.decodeToImageBitmap
 import io.ktor.network.sockets.Socket
 import org.koin.mp.KoinPlatform
 import soft.exe.colabora.study.core.entity.messages.ErrorMessage
+import soft.exe.colabora.study.core.entity.messages.ExamFinished
 import soft.exe.colabora.study.core.entity.messages.Message
 import soft.exe.colabora.study.core.entity.messages.QuestionMessage
 import soft.exe.colabora.study.core.entity.messages.RequestQuestion
@@ -31,6 +32,9 @@ class ServerPlayer(connection: Socket) : Player(connection) {
             is RequestQuestion -> {
                 val question = this.questionsService.getQuestion(message.questionId)
                 this.send(QuestionMessage(question))
+            }
+            is ExamFinished -> {
+                this.questionsService.evaluateExam(message.questionAnswers) {}
             }
             else -> {
                 this.send(ErrorMessage("UNKNOW_MESSAGE"))
