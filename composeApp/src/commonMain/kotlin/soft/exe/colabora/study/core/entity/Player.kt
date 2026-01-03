@@ -74,7 +74,6 @@ class Player(
                 if (this.questionsService == null)
                     this.questionsService = koin.get<QuestionsService>()
                 val question = this.questionsService!!.getQuestion(message.questionId)
-                this.send(QuestionMessage(question))
             }
             is QuestionMessage -> {
                 this.currentQuestion = message.question

@@ -19,6 +19,13 @@ class ExamController(private val connectionClient: ConnectionClient) : ViewModel
 
     val numOfQuestions: Int = this.connectionClient.numOfQuestions()
 
+    private val _selectedAnswer = MutableStateFlow<Int?>(null)
+    val selectedAnswer: StateFlow<Int?> = _selectedAnswer
+
+    fun changeSelectedAnswer(value: Int) {
+        this._selectedAnswer.value = value
+    }
+
     init {
         viewModelScope.launch {
             nextQuestion()
