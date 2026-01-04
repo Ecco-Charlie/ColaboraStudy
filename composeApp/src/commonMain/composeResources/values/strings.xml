@@ -75,4 +75,7 @@
     <string name="participate_exam">Participate in the exam</string>
     <string name="exam">Exam</string>
     <string name="waiting_results">Waiting for results...</string>
+    <string name="your_score">Your score was:</string>
+    <string name="show_corrections">Show correction</string>
+    <string name="back_top">Back to top</string>
 </resources>

@@ -9,6 +9,7 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import org.koin.mp.KoinPlatform
 import soft.exe.colabora.study.core.entity.messages.ErrorMessage
 import soft.exe.colabora.study.core.entity.messages.ExamFinished
+import soft.exe.colabora.study.core.entity.messages.ExamResults
 import soft.exe.colabora.study.core.entity.messages.Message
 import soft.exe.colabora.study.core.entity.messages.QuestionMessage
 import soft.exe.colabora.study.core.entity.messages.RegistrySuccess
@@ -29,6 +30,8 @@ class ClientPlayer(connection: Socket) : Player(connection) {
 
     private val questionAnswers: MutableList<QuestionAnswer> = mutableListOf()
 
+    private val _results = MutableStateFlow<ExamResults?>(null)
+    val results: StateFlow<ExamResults?> = _results
 
     override suspend fun messageHandler(message: Message?) {
         when(message) {
@@ -40,6 +43,9 @@ class ClientPlayer(connection: Socket) : Player(connection) {
             }
             is QuestionMessage -> {
                 this._currentQuestion.value = message.question
+            }
+            is ExamResults -> {
+                this._results.value = message
             }
             else -> {
                 this.send(ErrorMessage("UNKNOW_MESSAGE"))

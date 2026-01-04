@@ -11,7 +11,7 @@ import kotlinx.coroutines.launch
 import soft.exe.colabora.study.core.entity.Question
 import soft.exe.colabora.study.core.service.ConnectionClient
 import soft.exe.colabora.study.ui.navigation.NavigationEvent
-import soft.exe.colabora.study.ui.navigation.WaitResults
+import soft.exe.colabora.study.ui.navigation.Results
 
 class ExamController(private val connectionClient: ConnectionClient) : ViewModel() {
 
@@ -33,7 +33,7 @@ class ExamController(private val connectionClient: ConnectionClient) : ViewModel
         viewModelScope.launch {
             connectionClient.nextQuestion()
             connectionClient.finish.collect {
-                _navEvent.send(NavigationEvent.NavigateToAndClear(WaitResults))
+                _navEvent.send(NavigationEvent.NavigateToAndClear(Results))
             }
         }
     }

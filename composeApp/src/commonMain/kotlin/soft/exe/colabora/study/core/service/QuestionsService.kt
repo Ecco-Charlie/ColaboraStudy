@@ -5,6 +5,8 @@ import kotlinx.coroutines.flow.StateFlow
 import soft.exe.colabora.study.core.entity.Answer
 import soft.exe.colabora.study.core.entity.Question
 import soft.exe.colabora.study.core.entity.QuestionAnswer
+import soft.exe.colabora.study.core.entity.QuestionResult
+import soft.exe.colabora.study.core.entity.messages.ExamResults
 
 class QuestionsService {
 
@@ -15,12 +17,36 @@ class QuestionsService {
         return this._questions.value[index]
     }
 
-    fun evaluateExam(questionAnswers: List<QuestionAnswer>, onFinished: (Any) -> Unit) {
-        val res = questionAnswers.map { question ->
-            val rIndexQuestion = this._questions.value.indexOfFirst { q -> q.id == question.questionId }
-            this._questions.value[rIndexQuestion].answers[question.answerId].correct
+    suspend fun evaluateExam(questionAnswers: List<QuestionAnswer>, onFinished: suspend (ExamResults) -> Unit) {
+        var score = 0
+        val res = questionAnswers.mapNotNull { question ->
+            
+            val rQuestion = this._questions.value.find { q -> q.id == question.questionId }
+            if (rQuestion == null)
+                return@mapNotNull null
+
+            val rAnswer = rQuestion.answers.find { it.id == question.answerId }
+            if (rAnswer == null)
+                return@mapNotNull null
+
+            val correct = rAnswer.correct
+            if (correct) {
+                score++
+            }
+
+            QuestionResult(
+                questionText = rQuestion.question,
+                correct = correct,
+                selectedAnswer = rAnswer,
+                correctAnswer = if (correct) null else rQuestion.answers.find { it.correct }
+            )
         }
-        TODO()
+
+        onFinished(ExamResults(
+            results =  res,
+            score = score,
+            totalNumOfQuestions = this._questions.value.size
+        ))
     }
 
     suspend fun loadQuestions(prompt: String) {

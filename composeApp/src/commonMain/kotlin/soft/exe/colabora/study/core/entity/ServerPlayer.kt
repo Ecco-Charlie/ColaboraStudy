@@ -5,6 +5,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.graphics.decodeToImageBitmap
 import io.ktor.network.sockets.Socket
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import org.koin.mp.KoinPlatform
 import soft.exe.colabora.study.core.entity.messages.ErrorMessage
 import soft.exe.colabora.study.core.entity.messages.ExamFinished
@@ -34,7 +36,11 @@ class ServerPlayer(connection: Socket) : Player(connection) {
                 this.send(QuestionMessage(question))
             }
             is ExamFinished -> {
-                this.questionsService.evaluateExam(message.questionAnswers) {}
+                withContext(Dispatchers.Unconfined) {
+                    questionsService.evaluateExam(message.questionAnswers) {
+                        send(it)
+                    }
+                }
             }
             else -> {
                 this.send(ErrorMessage("UNKNOW_MESSAGE"))

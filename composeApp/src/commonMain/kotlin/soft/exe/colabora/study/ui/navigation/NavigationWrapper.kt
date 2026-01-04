@@ -9,7 +9,7 @@ import soft.exe.colabora.study.ui.screens.ExamScreen
 import soft.exe.colabora.study.ui.screens.HomeScreen
 import soft.exe.colabora.study.ui.screens.LobbyScreen
 import soft.exe.colabora.study.ui.screens.LoginScreen
-import soft.exe.colabora.study.ui.screens.WaitResultsScreen
+import soft.exe.colabora.study.ui.screens.ResultsScreen
 
 @Composable
 fun NavigationWrapper() {
@@ -28,8 +28,8 @@ fun NavigationWrapper() {
         composable<Exam> {
             ExamScreen { navigateHandle(navController, it) }
         }
-        composable<WaitResults> {
-            WaitResultsScreen()
+        composable<Results> {
+            ResultsScreen { navigateHandle(navController, it) }
         }
     }
 
@@ -40,11 +40,12 @@ private fun navigateHandle(navController: NavHostController, navEvent: Navigatio
         is NavigationEvent.NavigateTo -> navController.navigate(navEvent.route)
         is NavigationEvent.NavigateBack -> navController.popBackStack()
         is NavigationEvent.NavigateToAndClear -> navController.navigate(navEvent.route) {
-            popUpTo(navController.graph.startDestinationId) {
+            popUpTo(navController.graph.id) {
                 inclusive = true
                 saveState = true
             }
             launchSingleTop = true
+            restoreState = true
         }
     }
 }

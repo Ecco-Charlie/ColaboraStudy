@@ -11,6 +11,7 @@ import kotlinx.coroutines.launch
 import soft.exe.colabora.study.core.entity.ClientPlayer
 import soft.exe.colabora.study.core.entity.Question
 import soft.exe.colabora.study.core.entity.QuestionAnswer
+import soft.exe.colabora.study.core.entity.messages.ExamResults
 
 class ConnectionClient(
     private val userDataService: UserDataService
@@ -24,6 +25,8 @@ class ConnectionClient(
 
     lateinit var finish: Flow<Boolean>
 
+    lateinit var results: StateFlow<ExamResults?>
+
     suspend fun connectToServer(ip: String) {
         val con: Socket = aSocket(selectorManager).tcp().connect(ip, 9892)
         this.player = ClientPlayer(con)
@@ -32,6 +35,7 @@ class ConnectionClient(
         }
         this.currentQuestion = player!!.currentQuestion
         this.finish = player!!.finish
+        this.results = player!!.results
     }
 
     fun closeConnection() {

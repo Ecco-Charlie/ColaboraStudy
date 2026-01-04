@@ -15,4 +15,4 @@ object Lobby
 object Exam
 
 @Serializable
-object WaitResults
+object Results
