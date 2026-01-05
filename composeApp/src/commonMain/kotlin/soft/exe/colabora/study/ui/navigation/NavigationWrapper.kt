@@ -10,6 +10,7 @@ import soft.exe.colabora.study.ui.screens.HomeScreen
 import soft.exe.colabora.study.ui.screens.LobbyScreen
 import soft.exe.colabora.study.ui.screens.LoginScreen
 import soft.exe.colabora.study.ui.screens.ResultsScreen
+import soft.exe.colabora.study.ui.screens.ResultsServerScreen
 
 @Composable
 fun NavigationWrapper() {
@@ -30,6 +31,9 @@ fun NavigationWrapper() {
         }
         composable<Results> {
             ResultsScreen { navigateHandle(navController, it) }
+        }
+        composable<ResultsServer> {
+            ResultsServerScreen { navigateHandle(navController, it) }
         }
     }
 

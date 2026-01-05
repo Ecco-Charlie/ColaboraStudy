@@ -15,6 +15,7 @@ class ConnectionService(private val playerServerRepository: PlayerServerReposito
     private val selectorManager = SelectorManager(Dispatchers.IO)
     private var connection: ServerSocket? = null
     private var running: Boolean = false
+    val isRunning get() = this.running
 
     val players: StateFlow<List<ServerPlayer>> = playerServerRepository.players
 
@@ -27,14 +28,23 @@ class ConnectionService(private val playerServerRepository: PlayerServerReposito
     private suspend fun connectionHandle() {
         if (this.connection == null || !this.running)
             throw Exception("The Server Socket is not defined or not running")
-        while(this.connection != null && this.running) {
-            val client = this.connection!!.accept()
-            playerServerRepository.register(client)
+        try {
+            while(this.connection != null && this.running) {
+                val client = this.connection!!.accept()
+                playerServerRepository.register(client)
+            }
+        } catch(_: Exception) {
+            this.playerServerRepository.finish()
         }
     }
 
     suspend fun startGame(numOfQuestions: Int) {
         playerServerRepository.sendToAll(StartGameMessage(numOfQuestions))
+    }
+
+    fun finishGame() {
+        this.running = false
+        this.connection?.close()
     }
 
 }

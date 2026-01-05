@@ -16,3 +16,6 @@ object Exam
 
 @Serializable
 object Results
+
+@Serializable
+object ResultsServer

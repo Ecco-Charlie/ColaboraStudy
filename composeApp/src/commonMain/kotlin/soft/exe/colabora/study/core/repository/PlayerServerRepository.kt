@@ -9,6 +9,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import soft.exe.colabora.study.core.entity.Player
 import soft.exe.colabora.study.core.entity.ServerPlayer
+import soft.exe.colabora.study.core.entity.messages.ExamFinished
 import soft.exe.colabora.study.core.entity.messages.Message
 import soft.exe.colabora.study.core.entity.messages.RegistrySuccess
 
@@ -40,6 +41,11 @@ class PlayerServerRepository {
 
     suspend fun sendToAll(message: Message) {
         this._players.value.forEach { it.send(message) }
+    }
+
+    suspend fun finish() {
+        this.sendToAll(ExamFinished)
+        this._players.value.forEach { this.remove(it) }
     }
 
 }

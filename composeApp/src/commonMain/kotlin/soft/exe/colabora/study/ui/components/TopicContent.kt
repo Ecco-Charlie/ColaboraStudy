@@ -19,6 +19,7 @@ fun TopicContent(
     title: String,
     titleSize: TextUnit = 25.sp,
     heightSpacer: Dp = 5.dp,
+    modifier: Modifier = Modifier.widthIn(max = 450.dp).fillMaxWidth(),
     content: @Composable ColumnScope.() -> Unit
 ) {
     TitleText(
@@ -27,7 +28,7 @@ fun TopicContent(
     )
     Spacer(Modifier.height(heightSpacer))
     Column(
-        modifier = Modifier.widthIn(max = 450.dp).fillMaxWidth(),
+        modifier = modifier,
         horizontalAlignment = Alignment.CenterHorizontally,
         content = content
     )

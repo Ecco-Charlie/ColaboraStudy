@@ -18,6 +18,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -40,7 +41,6 @@ import org.jetbrains.compose.resources.vectorResource
 import org.koin.compose.viewmodel.koinViewModel
 import soft.exe.colabora.study.core.controllers.ResultsController
 import soft.exe.colabora.study.ui.components.QuestionCorrection
-import soft.exe.colabora.study.ui.navigation.Home
 import soft.exe.colabora.study.ui.navigation.NavigationEvent
 
 @Composable
@@ -53,6 +53,12 @@ fun ResultsScreen(
     val score by remember { mutableStateOf(results?.score) }
     val numOfQuestions by remember { mutableStateOf(results?.totalNumOfQuestions) }
     var showCorrection by remember { mutableStateOf(false) }
+
+    LaunchedEffect(true) {
+        controller.navEvent.collect {
+            onNavigate(it)
+        }
+    }
 
     Scaffold {
         if (results == null) {
@@ -111,10 +117,7 @@ fun ResultsScreen(
                     }
                 }
                 Spacer(Modifier.height(30.dp))
-                Button(onClick = {
-                    onNavigate(NavigationEvent.NavigateToAndClear(Home))
-                    controller.closeConnection()
-                }) {
+                Button(onClick = controller::closeConnection) {
                     Text(
                         text = stringResource(Res.string.back_top)
                     )

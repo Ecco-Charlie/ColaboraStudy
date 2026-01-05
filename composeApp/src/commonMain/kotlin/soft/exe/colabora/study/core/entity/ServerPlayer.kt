@@ -9,7 +9,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.koin.mp.KoinPlatform
 import soft.exe.colabora.study.core.entity.messages.ErrorMessage
-import soft.exe.colabora.study.core.entity.messages.ExamFinished
+import soft.exe.colabora.study.core.entity.messages.ExamResults
+import soft.exe.colabora.study.core.entity.messages.FinishExam
 import soft.exe.colabora.study.core.entity.messages.Message
 import soft.exe.colabora.study.core.entity.messages.QuestionMessage
 import soft.exe.colabora.study.core.entity.messages.RequestQuestion
@@ -21,6 +22,10 @@ class ServerPlayer(connection: Socket) : Player(connection) {
     private var questionsService: QuestionsService = KoinPlatform.getKoin().get<QuestionsService>()
 
     var userData by mutableStateOf<UserData?>(null)
+
+    var finished by mutableStateOf(false)
+
+    var results by mutableStateOf<ExamResults?>(null)
 
     override suspend fun messageHandler(message: Message?) {
         when(message) {
@@ -35,12 +40,14 @@ class ServerPlayer(connection: Socket) : Player(connection) {
                 val question = this.questionsService.getQuestion(message.questionId)
                 this.send(QuestionMessage(question))
             }
-            is ExamFinished -> {
+            is FinishExam -> {
                 withContext(Dispatchers.Unconfined) {
                     questionsService.evaluateExam(message.questionAnswers) {
                         send(it)
+                        results = it
                     }
                 }
+                this.finished = true
             }
             else -> {
                 this.send(ErrorMessage("UNKNOW_MESSAGE"))

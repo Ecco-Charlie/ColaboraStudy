@@ -78,4 +78,8 @@
     <string name="your_score">Your score was:</string>
     <string name="show_corrections">Show correction</string>
     <string name="back_top">Back to top</string>
+    <string name="results">Results</string>
+    <string name="score">Score</string>
+    <string name="time">Time</string>
+    <string name="finish_exam">Finish the exam</string>
 </resources>
