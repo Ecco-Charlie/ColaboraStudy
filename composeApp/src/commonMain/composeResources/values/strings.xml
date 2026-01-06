@@ -1,10 +1,11 @@
 <resources>
+    <string name="colabora_study">ColaboraStudy</string>
     <string name="create_profile">Create a profile</string>
     <string name="tap_to_add_avatar">Tap to add an avatar</string>
     <string name="username">Username</string>
     <string name="next">Next</string>
     <string name="your_username">Your username</string>
-    <string name="create_exam">Create an exam</string>
+    <string name="create_exam">Or create an exam</string>
     <string name="topic_description">Topic description</string>
     <string name="describe_topic">Describe the topic you want to generate questions about.</string>
     <string name="required_field">This field is required</string>
@@ -82,4 +83,7 @@
     <string name="score">Score</string>
     <string name="time">Time</string>
     <string name="finish_exam">Finish the exam</string>
+    <string name="join_exam">Join an exam</string>
+    <string name="join">Join</string>
+    <string name="connection_address">Connection address</string>
 </resources>

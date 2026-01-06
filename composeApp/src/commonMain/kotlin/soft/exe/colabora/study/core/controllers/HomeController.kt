@@ -17,7 +17,9 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.getString
+import org.koin.mp.KoinPlatform
 import soft.exe.colabora.study.core.entity.UserData
+import soft.exe.colabora.study.core.service.ConnectionClient
 import soft.exe.colabora.study.core.service.QuestionsService
 import soft.exe.colabora.study.core.service.UserDataService
 import soft.exe.colabora.study.core.utils.LoadState
@@ -26,8 +28,7 @@ import soft.exe.colabora.study.ui.navigation.Login
 import soft.exe.colabora.study.ui.navigation.NavigationEvent
 
 class HomeController(
-    private val udService: UserDataService,
-    private val questionsService: QuestionsService
+    private val udService: UserDataService
 ) : ViewModel() {
 
     private val _load = MutableStateFlow<LoadState>(LoadState.Load)
@@ -84,6 +85,13 @@ class HomeController(
         }
     }
 
+    private val _ip = MutableStateFlow("")
+    val ip: StateFlow<String> = _ip
+
+    fun onChangeIp(value: String) {
+        this._ip.value = value
+    }
+
     init {
         viewModelScope.launch {
             val ud = udService.instance
@@ -114,7 +122,19 @@ class HomeController(
                 getString(type)
             )
             _navEvent.send(NavigationEvent.NavigateTo(Lobby))
-            questionsService.loadQuestions(prompt)
+            KoinPlatform.getKoin().get<QuestionsService>().loadQuestions(prompt)
+        }
+    }
+
+    fun connectToExam() {
+        this._load.value = LoadState.Load
+        viewModelScope.launch {
+            try {
+                KoinPlatform.getKoin().get<ConnectionClient>().connectToServer(_ip.value)
+                TODO()
+            } catch (_: Exception) {
+                _load.value = LoadState.Ok
+            }
         }
     }
 

@@ -13,11 +13,11 @@ import org.jetbrains.compose.resources.painterResource
 
 @Composable
 fun Logo(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier.size(250.dp)
 ) {
     Image(
         painterResource(if (isSystemInDarkTheme()) Res.drawable.logo_dark else Res.drawable.logo),
         contentDescription = "ColaboraStudy Logo",
-        modifier = modifier.size(250.dp)
+        modifier = modifier
     )
 }

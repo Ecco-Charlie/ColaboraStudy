@@ -17,6 +17,7 @@ import soft.exe.colabora.study.core.service.QuestionsService
 import soft.exe.colabora.study.core.utils.LoadState
 import soft.exe.colabora.study.ui.navigation.Exam
 import soft.exe.colabora.study.ui.navigation.NavigationEvent
+import soft.exe.colabora.study.ui.navigation.Results
 
 class LobbyController(
     private val questionsService: QuestionsService,
@@ -74,7 +75,7 @@ class LobbyController(
             if (_participate.value) {
                 _navEvent.send(NavigationEvent.NavigateToAndClear(Exam))
             } else {
-                TODO()
+                _navEvent.send(NavigationEvent.NavigateToAndClear(Results))
             }
         }
     }

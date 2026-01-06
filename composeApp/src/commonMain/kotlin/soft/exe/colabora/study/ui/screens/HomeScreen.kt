@@ -47,6 +47,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import colaborastudy.composeapp.generated.resources.Res
 import colaborastudy.composeapp.generated.resources.add_photo
 import colaborastudy.composeapp.generated.resources.click_to_photo
+import colaborastudy.composeapp.generated.resources.colabora_study
 import colaborastudy.composeapp.generated.resources.create_exam
 import colaborastudy.composeapp.generated.resources.describe_topic
 import colaborastudy.composeapp.generated.resources.difficulties
@@ -54,6 +55,8 @@ import colaborastudy.composeapp.generated.resources.difficulty
 import colaborastudy.composeapp.generated.resources.exam_settings
 import colaborastudy.composeapp.generated.resources.exam_time
 import colaborastudy.composeapp.generated.resources.hours
+import colaborastudy.composeapp.generated.resources.join
+import colaborastudy.composeapp.generated.resources.join_exam
 import colaborastudy.composeapp.generated.resources.minutes
 import colaborastudy.composeapp.generated.resources.number_questions
 import colaborastudy.composeapp.generated.resources.required_field
@@ -69,6 +72,7 @@ import org.jetbrains.compose.resources.vectorResource
 import org.koin.compose.viewmodel.koinViewModel
 import soft.exe.colabora.study.core.controllers.HomeController
 import soft.exe.colabora.study.core.entity.UserData
+import soft.exe.colabora.study.ui.components.Logo
 import soft.exe.colabora.study.ui.components.SlideSetting
 import soft.exe.colabora.study.ui.components.TitleText
 import soft.exe.colabora.study.ui.components.TopicContent
@@ -85,6 +89,7 @@ fun HomeScreen(
     val numOfQuestions by controller.numOfQuestions.collectAsStateWithLifecycle()
     val difficulty by controller.difficulty.collectAsStateWithLifecycle()
     val photo by controller.photo.collectAsStateWithLifecycle()
+    val ip by controller.ip.collectAsStateWithLifecycle()
 
     LaunchedEffect(true) {
         controller.navEvent.collect { onNavigate(it) }
@@ -98,11 +103,46 @@ fun HomeScreen(
                 .padding(vertical = 10.dp, horizontal = 20.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            // Head
+
+            //Head
             Header(userData = controller.userData, isLoading = load.isLoad)
-            Spacer(Modifier.height(40.dp))
 
             // Body
+            Spacer(Modifier.height(20.dp))
+            TopicContent(
+                title = stringResource(Res.string.join_exam),
+                titleSize = 30.sp
+            ) {
+                OutlinedTextField(
+                    value = ip,
+                    onValueChange = controller::onChangeIp,
+                    shape = MaterialTheme.shapes.medium,
+                    modifier = Modifier.fillMaxWidth(),
+                    placeholder = {
+                        Text(
+                            text = "xxx.xxx.xx.x"
+                        )
+                    }
+                )
+                Spacer(Modifier.height(10.dp))
+                Button(
+                    onClick = controller::connectToExam,
+                    enabled = !load.isLoad
+                ) {
+                    Text(
+                        text = stringResource(Res.string.join),
+                        fontFamily = MaterialTheme.typography.titleSmall.fontFamily
+                    )
+                }
+            }
+
+            HorizontalDivider(Modifier.padding(vertical = 20.dp))
+
+            TitleText(
+                text = stringResource(Res.string.create_exam),
+                size = 30.sp
+            )
+            Spacer(Modifier.height(15.dp))
             TopicContent(
                 title = stringResource(Res.string.topic_description) + " *"
             ) {
@@ -206,12 +246,14 @@ private fun Header(userData: UserData?, isLoading: Boolean) {
         modifier = Modifier.height(50.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
+        Logo(Modifier.size(50.dp))
+        Spacer(Modifier.width(10.dp))
         TitleText(
-            text = stringResource(Res.string.create_exam),
+            text = stringResource(Res.string.colabora_study),
             size = 30.sp
         )
         Spacer(Modifier.weight(1f))
-        if (!isLoading && userData != null) {
+        if (userData != null) {
             Image(
                 userData.picture!!,
                 contentDescription = "Avatar",
