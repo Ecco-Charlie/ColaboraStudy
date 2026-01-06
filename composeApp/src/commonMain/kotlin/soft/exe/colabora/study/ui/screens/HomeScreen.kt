@@ -127,7 +127,9 @@ fun HomeScreen(
                 Spacer(Modifier.height(10.dp))
                 Button(
                     onClick = controller::connectToExam,
-                    enabled = !load.isLoad
+                    enabled = !load.isLoad,
+                    modifier = Modifier.fillMaxWidth(),
+                    shape = MaterialTheme.shapes.medium
                 ) {
                     Text(
                         text = stringResource(Res.string.join),

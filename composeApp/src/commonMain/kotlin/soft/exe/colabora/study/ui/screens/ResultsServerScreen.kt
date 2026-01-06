@@ -18,8 +18,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -45,8 +43,6 @@ fun ResultsServerScreen(
 ) {
 
     val players by controller.players.collectAsStateWithLifecycle()
-    val results by remember { mutableStateOf(players.filter { it.finished }) }
-    val allFinished by controller.allFinished.collectAsStateWithLifecycle()
 
     LaunchedEffect(true) {
         controller.navEvent.collect {
@@ -95,7 +91,7 @@ fun ResultsServerScreen(
                 }
                 HorizontalDivider()
                 LazyColumn {
-                    items(results) {
+                    items(players.filter { it.finished }) {
                         Row(
                             modifier = Modifier.padding(vertical = 10.dp)
                         ) {
@@ -118,7 +114,7 @@ fun ResultsServerScreen(
             Spacer(Modifier.weight(1f))
             Button(
                 onClick = controller::finishExam,
-                enabled = allFinished
+                enabled = (players.indexOfFirst { !it.finished } == -1)
             ) {
                 Text(
                     text = stringResource(Res.string.finish_exam)

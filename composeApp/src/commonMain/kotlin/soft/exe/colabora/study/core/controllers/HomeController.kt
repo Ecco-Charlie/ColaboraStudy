@@ -7,15 +7,19 @@ import colaborastudy.composeapp.generated.resources.Res
 import colaborastudy.composeapp.generated.resources.base_prompt
 import colaborastudy.composeapp.generated.resources.text_image_prompt
 import colaborastudy.composeapp.generated.resources.text_prompt
+import colaborastudy.composeapp.generated.resources.wait_start
 import io.github.vinceglb.filekit.FileKit
 import io.github.vinceglb.filekit.dialogs.FileKitType
 import io.github.vinceglb.filekit.dialogs.compose.util.toImageBitmap
 import io.github.vinceglb.filekit.dialogs.openFilePicker
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.IO
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.jetbrains.compose.resources.getString
 import org.koin.mp.KoinPlatform
 import soft.exe.colabora.study.core.entity.UserData
@@ -26,6 +30,7 @@ import soft.exe.colabora.study.core.utils.LoadState
 import soft.exe.colabora.study.ui.navigation.Lobby
 import soft.exe.colabora.study.ui.navigation.Login
 import soft.exe.colabora.study.ui.navigation.NavigationEvent
+import soft.exe.colabora.study.ui.navigation.Wait
 
 class HomeController(
     private val udService: UserDataService
@@ -130,8 +135,10 @@ class HomeController(
         this._load.value = LoadState.Load
         viewModelScope.launch {
             try {
-                KoinPlatform.getKoin().get<ConnectionClient>().connectToServer(_ip.value)
-                TODO()
+                withContext(Dispatchers.IO) {
+                    KoinPlatform.getKoin().get<ConnectionClient>().connectToServer(_ip.value)
+                }
+                _navEvent.send(NavigationEvent.NavigateToAndClear(Wait(text = getString(Res.string.wait_start))))
             } catch (_: Exception) {
                 _load.value = LoadState.Ok
             }

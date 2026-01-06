@@ -2,6 +2,7 @@ package soft.exe.colabora.study.core.controllers
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -33,7 +34,10 @@ class ExamController(private val connectionClient: ConnectionClient) : ViewModel
         viewModelScope.launch {
             connectionClient.nextQuestion()
             connectionClient.finish.collect {
-                _navEvent.send(NavigationEvent.NavigateToAndClear(Results))
+                if (it) {
+                    _navEvent.send(NavigationEvent.NavigateToAndClear(Results))
+                    this@launch.cancel()
+                }
             }
         }
     }

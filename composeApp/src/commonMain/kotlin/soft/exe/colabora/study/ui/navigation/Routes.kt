@@ -19,3 +19,6 @@ object Results
 
 @Serializable
 object ResultsServer
+
+@Serializable
+data class Wait(val text: String)

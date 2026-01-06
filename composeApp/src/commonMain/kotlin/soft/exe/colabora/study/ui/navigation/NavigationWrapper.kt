@@ -5,12 +5,14 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.toRoute
 import soft.exe.colabora.study.ui.screens.ExamScreen
 import soft.exe.colabora.study.ui.screens.HomeScreen
 import soft.exe.colabora.study.ui.screens.LobbyScreen
 import soft.exe.colabora.study.ui.screens.LoginScreen
 import soft.exe.colabora.study.ui.screens.ResultsScreen
 import soft.exe.colabora.study.ui.screens.ResultsServerScreen
+import soft.exe.colabora.study.ui.screens.WaitScreen
 
 @Composable
 fun NavigationWrapper() {
@@ -35,6 +37,10 @@ fun NavigationWrapper() {
         composable<ResultsServer> {
             ResultsServerScreen { navigateHandle(navController, it) }
         }
+        composable<Wait> { backStack ->
+            val text: Wait = backStack.toRoute()
+            WaitScreen(text = text.text) { navigateHandle(navController, it) }
+        }
     }
 
 }
@@ -49,7 +55,6 @@ private fun navigateHandle(navController: NavHostController, navEvent: Navigatio
                 saveState = true
             }
             launchSingleTop = true
-            restoreState = true
         }
     }
 }

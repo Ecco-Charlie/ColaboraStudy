@@ -50,8 +50,6 @@ fun ResultsScreen(
 ) {
 
     val results by controller.results.collectAsStateWithLifecycle()
-    val score by remember { mutableStateOf(results?.score) }
-    val numOfQuestions by remember { mutableStateOf(results?.totalNumOfQuestions) }
     var showCorrection by remember { mutableStateOf(false) }
 
     LaunchedEffect(true) {
@@ -83,7 +81,7 @@ fun ResultsScreen(
                     text = stringResource(Res.string.your_score)
                 )
                 Text(
-                    text = "$score/$numOfQuestions",
+                    text = "${results?.score}/${results?.totalNumOfQuestions}",
                     fontSize = 35.sp,
                     fontFamily = MaterialTheme.typography.titleLarge.fontFamily
                 )

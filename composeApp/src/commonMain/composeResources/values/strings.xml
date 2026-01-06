@@ -86,4 +86,6 @@
     <string name="join_exam">Join an exam</string>
     <string name="join">Join</string>
     <string name="connection_address">Connection address</string>
+    <string name="wait_start">Waiting for the exam to start...</string>
+    <string name="waiting_exam_end">Waiting for the exam to end</string>
 </resources>

@@ -13,9 +13,7 @@ import soft.exe.colabora.study.core.entity.Question
 import soft.exe.colabora.study.core.entity.QuestionAnswer
 import soft.exe.colabora.study.core.entity.messages.ExamResults
 
-class ConnectionClient(
-    private val userDataService: UserDataService
-) {
+class ConnectionClient {
 
     private val selectorManager = SelectorManager(Dispatchers.Unconfined)
     private val scope = CoroutineScope(Dispatchers.Unconfined)
@@ -27,6 +25,8 @@ class ConnectionClient(
 
     lateinit var results: StateFlow<ExamResults?>
 
+    lateinit var start: StateFlow<Boolean>
+
     suspend fun connectToServer(ip: String) {
         val con: Socket = aSocket(selectorManager).tcp().connect(ip, 9892)
         this.player = ClientPlayer(con)
@@ -36,6 +36,7 @@ class ConnectionClient(
         this.currentQuestion = player!!.currentQuestion
         this.finish = player!!.finish
         this.results = player!!.results
+        this.start = player!!.start
     }
 
     fun closeConnection() {
