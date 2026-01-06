@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.safeContentPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
@@ -52,7 +53,7 @@ fun ResultsServerScreen(
 
     Scaffold {
         Column(
-            modifier = Modifier.fillMaxSize().padding(vertical = 20.dp, horizontal = 40.dp)
+            modifier = Modifier.fillMaxSize().safeContentPadding().padding(vertical = 20.dp, horizontal = 40.dp)
         ) {
             TopicContent(
                 title = stringResource(Res.string.people_connected),

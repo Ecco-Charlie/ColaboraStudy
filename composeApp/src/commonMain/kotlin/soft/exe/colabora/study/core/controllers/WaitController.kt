@@ -12,8 +12,8 @@ import kotlinx.coroutines.flow.zip
 import kotlinx.coroutines.launch
 import soft.exe.colabora.study.core.service.ConnectionClient
 import soft.exe.colabora.study.ui.navigation.Exam
-import soft.exe.colabora.study.ui.navigation.Home
 import soft.exe.colabora.study.ui.navigation.NavigationEvent
+import soft.exe.colabora.study.ui.navigation.Results
 
 class WaitController(connectionClient: ConnectionClient) : ViewModel() {
 
@@ -36,7 +36,7 @@ class WaitController(connectionClient: ConnectionClient) : ViewModel() {
         }
         finishScope.launch {
             finish.zip(finish.drop(1)){ _, _ -> }.collect {
-                _navEvent.send(NavigationEvent.NavigateToAndClear(Home))
+                _navEvent.send(NavigationEvent.NavigateToAndClear(Results))
                 startScope.cancel()
                 finishScope.cancel()
             }
