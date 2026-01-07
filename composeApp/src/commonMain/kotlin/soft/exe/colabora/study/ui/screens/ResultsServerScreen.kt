@@ -9,11 +9,13 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeContentPadding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Button
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -27,6 +29,7 @@ import colaborastudy.composeapp.generated.resources.finish_exam
 import colaborastudy.composeapp.generated.resources.people_connected
 import colaborastudy.composeapp.generated.resources.results
 import colaborastudy.composeapp.generated.resources.score
+import colaborastudy.composeapp.generated.resources.show_results
 import colaborastudy.composeapp.generated.resources.time
 import colaborastudy.composeapp.generated.resources.time_remaining
 import colaborastudy.composeapp.generated.resources.username
@@ -62,8 +65,8 @@ fun ResultsServerScreen(
                 heightSpacer = 10.dp
             ) {
                 LazyRow(
-                    horizontalArrangement = Arrangement.Start,
-                    modifier = Modifier.fillMaxWidth()
+                    horizontalArrangement = Arrangement.spacedBy(10.dp),
+                    modifier = Modifier.fillMaxWidth(),
                 ) {
                     items(players) {
                         PlayerOnline(
@@ -119,13 +122,26 @@ fun ResultsServerScreen(
                 }
             }
             Spacer(Modifier.weight(1f))
-            Button(
-                onClick = controller::finishExam,
-                enabled = (players.indexOfFirst { !it.finished } == -1)
-            ) {
-                Text(
-                    text = stringResource(Res.string.finish_exam)
-                )
+            Row {
+                Button(
+                    onClick = controller::finishExam,
+                    enabled = (players.indexOfFirst { !it.finished } == -1)
+                ) {
+                    Text(
+                        text = stringResource(Res.string.finish_exam),
+                        fontFamily = MaterialTheme.typography.titleSmall.fontFamily
+                    )
+                }
+                Spacer(Modifier.width(10.dp))
+                Button(
+                    onClick = controller::showResults,
+                    enabled = (players.indexOfFirst { !it.finished } == -1)
+                ) {
+                    Text(
+                        text = stringResource(Res.string.show_results),
+                        fontFamily = MaterialTheme.typography.titleSmall.fontFamily
+                    )
+                }
             }
         }
     }

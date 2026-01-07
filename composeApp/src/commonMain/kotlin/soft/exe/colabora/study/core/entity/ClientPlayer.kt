@@ -16,6 +16,7 @@ import soft.exe.colabora.study.core.entity.messages.Message
 import soft.exe.colabora.study.core.entity.messages.QuestionMessage
 import soft.exe.colabora.study.core.entity.messages.RegistrySuccess
 import soft.exe.colabora.study.core.entity.messages.RequestQuestion
+import soft.exe.colabora.study.core.entity.messages.ShowResults
 import soft.exe.colabora.study.core.entity.messages.StartGameMessage
 import soft.exe.colabora.study.core.entity.messages.TickTime
 import soft.exe.colabora.study.core.entity.messages.TimeOut
@@ -78,7 +79,6 @@ class ClientPlayer(connection: Socket) : Player(connection) {
             }
             is ExamFinished -> {
                 this.close()
-                this._finish.value = false
             }
             is TickTime -> {
                 if (this._time.value != message.time)
@@ -87,6 +87,9 @@ class ClientPlayer(connection: Socket) : Player(connection) {
             is TimeOut -> {
                 this._finish.value = true
                 this.send(FinishExam(this.questionAnswers, this.time.value))
+            }
+            is ShowResults -> {
+                this._finish.value = false
             }
             else -> {
                 this.send(ErrorMessage("UNKNOW_MESSAGE"))

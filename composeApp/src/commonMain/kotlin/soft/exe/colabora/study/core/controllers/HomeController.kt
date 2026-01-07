@@ -119,7 +119,6 @@ class HomeController(
     }
 
     fun generateQuestions() {
-        this._load.value = LoadState.Load
         val timeInSeconds = (_minutes.value * 60) + (_hours.value * 3600)
         if (this._description.value.isEmpty() || this._description.value.length < 10) {
             viewModelScope.launch {
@@ -133,6 +132,7 @@ class HomeController(
             }
             return
         }
+        this._load.value = LoadState.Load
         val type = if (this._photo.value != null) Res.string.text_image_prompt
                     else Res.string.text_prompt
         viewModelScope.launch {

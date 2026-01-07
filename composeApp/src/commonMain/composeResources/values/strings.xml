@@ -98,4 +98,5 @@
     <string name="no_possible_connect_exam">It was not possible to connect to the exam</string>
     <string name="exam_cannot_have_0">The exam cannot have 0 participants</string>
     <string name="questions_no_yet_load">The questions have not yet loaded</string>
+    <string name="show_results">Show results</string>
 </resources>

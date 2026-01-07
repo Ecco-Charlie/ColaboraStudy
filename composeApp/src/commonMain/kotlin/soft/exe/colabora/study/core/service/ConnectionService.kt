@@ -9,6 +9,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import soft.exe.colabora.study.core.entity.ServerPlayer
+import soft.exe.colabora.study.core.entity.messages.ShowResults
 import soft.exe.colabora.study.core.entity.messages.StartGameMessage
 import soft.exe.colabora.study.core.entity.messages.TickTime
 import soft.exe.colabora.study.core.entity.messages.TimeOut
@@ -67,8 +68,12 @@ class ConnectionService(private val playerServerRepository: PlayerServerReposito
         this.playerServerRepository.sendToAll(TimeOut)
     }
 
-    fun finishGame() {
+    suspend fun showResults() {
         this.running = false
+        this.playerServerRepository.sendToAll(ShowResults)
+    }
+
+    fun finishGame() {
         this.time = 0
         this.connection?.close()
     }

@@ -21,6 +21,12 @@ class ResultsServerController(private val connectionService: ConnectionService) 
 
     val timeRemaining: StateFlow<String> = connectionService.timeRemaining
 
+    fun showResults() {
+        viewModelScope.launch {
+            connectionService.showResults()
+        }
+    }
+
     fun finishExam() {
         viewModelScope.launch {
             _navEvent.send(NavigationEvent.NavigateToAndClear(Home))
