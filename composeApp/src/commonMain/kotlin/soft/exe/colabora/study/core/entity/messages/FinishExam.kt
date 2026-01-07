@@ -7,5 +7,6 @@ import soft.exe.colabora.study.core.entity.QuestionAnswer
 @Serializable
 @SerialName("FINISH_EXAM")
 data class FinishExam(
-    val questionAnswers: List<QuestionAnswer>
+    val questionAnswers: List<QuestionAnswer>,
+    val time: Int
 ) : Message()

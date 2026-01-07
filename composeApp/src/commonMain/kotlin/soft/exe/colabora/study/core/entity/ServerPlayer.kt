@@ -27,6 +27,8 @@ class ServerPlayer(connection: Socket) : Player(connection) {
 
     var results by mutableStateOf<ExamResults?>(null)
 
+    var time: String = "00:00:00"
+
     override suspend fun messageHandler(message: Message?) {
         when(message) {
             is UserDataMessage -> {
@@ -41,6 +43,8 @@ class ServerPlayer(connection: Socket) : Player(connection) {
                 this.send(QuestionMessage(question))
             }
             is FinishExam -> {
+                val l = message.time
+                this.time = "${l/3600}:${(l%3600)/60}:${(l%3600)%60}"
                 withContext(Dispatchers.Unconfined) {
                     questionsService.evaluateExam(message.questionAnswers) {
                         send(it)

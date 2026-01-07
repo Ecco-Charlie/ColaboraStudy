@@ -12,9 +12,12 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.getString
+import org.koin.mp.KoinPlatform
 import soft.exe.colabora.study.core.entity.Question
 import soft.exe.colabora.study.core.service.ConnectionClient
+import soft.exe.colabora.study.core.service.ConnectionService
 import soft.exe.colabora.study.ui.navigation.NavigationEvent
+import soft.exe.colabora.study.ui.navigation.Results
 import soft.exe.colabora.study.ui.navigation.Wait
 
 class ExamController(private val connectionClient: ConnectionClient) : ViewModel() {
@@ -33,12 +36,19 @@ class ExamController(private val connectionClient: ConnectionClient) : ViewModel
         this._selectedAnswer.value = value
     }
 
+    val time: StateFlow<Float> = connectionClient.timeValue
+
+    val timeRemaining: StateFlow<String> = connectionClient.timeRemaining
+
     init {
         viewModelScope.launch {
             connectionClient.nextQuestion()
             connectionClient.finish.collect {
                 if (it) {
-                    _navEvent.send(NavigationEvent.NavigateToAndClear(Wait(text = getString(Res.string.waiting_exam_end))))
+                    if (KoinPlatform.getKoin().get<ConnectionService>().isRunning)
+                        _navEvent.send(NavigationEvent.NavigateToAndClear(Results))
+                    else
+                        _navEvent.send(NavigationEvent.NavigateToAndClear(Wait(text = getString(Res.string.waiting_exam_end))))
                     this@launch.cancel()
                 }
             }

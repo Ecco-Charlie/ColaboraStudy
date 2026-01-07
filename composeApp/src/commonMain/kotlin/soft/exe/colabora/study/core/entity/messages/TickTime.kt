@@ -4,8 +4,5 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-@SerialName("START_GAME")
-data class StartGameMessage(
-    val numOfQuestions: Int,
-    val totalTimeInSeconds: Int
-) : Message()
+@SerialName("TICK_TIME")
+data class TickTime(val time: Int) : Message()

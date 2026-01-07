@@ -17,6 +17,12 @@ class QuestionsService {
         return this._questions.value[index]
     }
 
+    var totalTimeInSeconds: Int = 0
+
+    fun setTime(value: Int) {
+        this.totalTimeInSeconds = value
+    }
+
     suspend fun evaluateExam(questionAnswers: List<QuestionAnswer>, onFinished: suspend (ExamResults) -> Unit) {
         var score = 0
         val res = questionAnswers.mapNotNull { question ->

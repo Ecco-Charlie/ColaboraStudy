@@ -6,6 +6,7 @@ import io.ktor.network.sockets.aSocket
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import soft.exe.colabora.study.core.entity.ClientPlayer
@@ -27,6 +28,15 @@ class ConnectionClient {
 
     lateinit var start: StateFlow<Boolean>
 
+    private val _timeValue = MutableStateFlow(0.0f)
+    val timeValue: StateFlow<Float> = _timeValue
+
+    lateinit var timeRemaining: StateFlow<String>
+
+    private var passed: Float = 0.0f
+
+    var totalTimeInSeconds: Int = 0
+
     suspend fun connectToServer(ip: String) {
         val con: Socket = aSocket(selectorManager).tcp().connect(ip, 9892)
         this.player = ClientPlayer(con)
@@ -37,6 +47,22 @@ class ConnectionClient {
         this.finish = player!!.finish
         this.results = player!!.results
         this.start = player!!.start
+        this.totalTimeInSeconds = player!!.totalTimeInSeconds
+        this.timeRemaining = player!!.timeRemaining
+        scope.launch {
+            start.collect {
+                if (!it)
+                    return@collect
+                passed = 1.0f / player!!.totalTimeInSeconds
+                scope.launch { startTimer() }
+            }
+        }
+    }
+
+    suspend fun startTimer() {
+        player!!.time.collect {
+            _timeValue.value = (passed * it)
+        }
     }
 
     fun closeConnection() {

@@ -112,11 +112,11 @@ class HomeController(
 
     fun generateQuestions() {
         this._load.value = LoadState.Load
-        if (this._description.value.isEmpty())
+        val timeInSeconds = (_minutes.value * 60) + (_hours.value * 3600)
+        if (this._description.value.isEmpty() || timeInSeconds < 60)
             return
         val type = if (this._photo.value != null) Res.string.text_image_prompt
                     else Res.string.text_prompt
-
         viewModelScope.launch {
             val prompt = getString(
                 Res.string.base_prompt,
@@ -127,7 +127,9 @@ class HomeController(
                 getString(type)
             )
             _navEvent.send(NavigationEvent.NavigateTo(Lobby))
-            KoinPlatform.getKoin().get<QuestionsService>().loadQuestions(prompt)
+            val qs = KoinPlatform.getKoin().get<QuestionsService>()
+            qs.loadQuestions(prompt)
+            qs.setTime(timeInSeconds)
         }
     }
 

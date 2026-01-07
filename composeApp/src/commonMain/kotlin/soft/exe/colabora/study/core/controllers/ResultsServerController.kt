@@ -19,6 +19,8 @@ class ResultsServerController(private val connectionService: ConnectionService) 
     private val _navEvent: Channel<NavigationEvent> = Channel()
     val navEvent: Flow<NavigationEvent> = _navEvent.receiveAsFlow()
 
+    val timeRemaining: StateFlow<String> = connectionService.timeRemaining
+
     fun finishExam() {
         viewModelScope.launch {
             _navEvent.send(NavigationEvent.NavigateToAndClear(Home))

@@ -69,7 +69,7 @@ class LobbyController(
         if (this.players.value.isEmpty() || numOfQuestions == 0)
             return
         viewModelScope.launch {
-            connectionService.startGame(numOfQuestions)
+            connectionService.startGame(numOfQuestions, questionsService.totalTimeInSeconds)
         }
         viewModelScope.launch {
             if (_participate.value) {

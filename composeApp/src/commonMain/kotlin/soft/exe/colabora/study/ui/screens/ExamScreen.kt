@@ -13,6 +13,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.selection.selectable
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Scaffold
@@ -22,6 +23,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -29,6 +31,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import colaborastudy.composeapp.generated.resources.Res
 import colaborastudy.composeapp.generated.resources.exam
 import colaborastudy.composeapp.generated.resources.next
+import colaborastudy.composeapp.generated.resources.time_remaining
 import com.mikepenz.markdown.m3.Markdown
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
@@ -44,6 +47,8 @@ fun ExamScreen(
 
     val question by controller.currentQuestion.collectAsStateWithLifecycle()
     val answerSelected by controller.selectedAnswer.collectAsStateWithLifecycle()
+    val time by controller.time.collectAsStateWithLifecycle()
+    val timeRemaining by controller.timeRemaining.collectAsStateWithLifecycle()
 
     LaunchedEffect(true) {
         controller.navEvent.collect { onNavigate(it) }
@@ -56,6 +61,16 @@ fun ExamScreen(
             TitleText(
                 text = stringResource(Res.string.exam),
                 size = 30.sp
+            )
+            Spacer(Modifier.height(10.dp))
+            LinearProgressIndicator(
+                progress = { time },
+                modifier = Modifier.fillMaxWidth().height(10.dp),
+                strokeCap = StrokeCap.Square
+            )
+            Spacer(Modifier.height(5.dp))
+            Text(
+                text = stringResource(Res.string.time_remaining) + timeRemaining
             )
             Spacer(Modifier.height(10.dp))
             if (question == null) {

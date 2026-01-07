@@ -28,6 +28,7 @@ import colaborastudy.composeapp.generated.resources.people_connected
 import colaborastudy.composeapp.generated.resources.results
 import colaborastudy.composeapp.generated.resources.score
 import colaborastudy.composeapp.generated.resources.time
+import colaborastudy.composeapp.generated.resources.time_remaining
 import colaborastudy.composeapp.generated.resources.username
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
@@ -44,6 +45,7 @@ fun ResultsServerScreen(
 ) {
 
     val players by controller.players.collectAsStateWithLifecycle()
+    val timeRemaining by controller.timeRemaining.collectAsStateWithLifecycle()
 
     LaunchedEffect(true) {
         controller.navEvent.collect {
@@ -71,7 +73,11 @@ fun ResultsServerScreen(
                     }
                 }
             }
-            Spacer(Modifier.height(40.dp))
+            Spacer(Modifier.height(20.dp))
+            Text(
+                text = stringResource(Res.string.time_remaining) + timeRemaining
+            )
+            Spacer(Modifier.height(20.dp))
             TopicContent(
                 title = stringResource(Res.string.results),
                 modifier = Modifier.fillMaxWidth()
@@ -105,7 +111,7 @@ fun ResultsServerScreen(
                                 modifier = Modifier.weight(0.4f)
                             )
                             Text(
-                                text = "12:11 minutes",
+                                text = it.time,
                                 modifier = Modifier.weight(0.3f)
                             )
                         }
