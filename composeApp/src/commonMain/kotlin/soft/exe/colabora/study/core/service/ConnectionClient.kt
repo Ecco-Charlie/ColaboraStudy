@@ -5,6 +5,7 @@ import io.ktor.network.sockets.Socket
 import io.ktor.network.sockets.aSocket
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.IO
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -16,7 +17,7 @@ import soft.exe.colabora.study.core.entity.messages.ExamResults
 
 class ConnectionClient {
 
-    private val selectorManager = SelectorManager(Dispatchers.Unconfined)
+    private val selectorManager = SelectorManager(Dispatchers.IO)
     private val scope = CoroutineScope(Dispatchers.Unconfined)
     private var player: ClientPlayer? = null
 

@@ -28,7 +28,7 @@ class PlayerServerRepository {
         scope.launch {
             player.listening(::remove)
         }
-        player.send(RegistrySuccess())
+        player.send(RegistrySuccess)
     }
 
     fun remove(player: Player) {

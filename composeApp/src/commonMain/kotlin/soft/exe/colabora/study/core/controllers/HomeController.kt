@@ -1,5 +1,8 @@
 package soft.exe.colabora.study.core.controllers
 
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -42,7 +45,7 @@ class HomeController(
     private val _navEvent: Channel<NavigationEvent> = Channel()
     val navEvent = _navEvent.receiveAsFlow()
 
-    var userData: UserData? = null
+    var userData by mutableStateOf<UserData?>(null)
         private set
 
     private val _description = MutableStateFlow("")
@@ -67,14 +70,12 @@ class HomeController(
     }
 
     private val _hours = MutableStateFlow(0)
-    val hours: StateFlow<Int> = _hours
 
     fun onChangeHours(value: Int) {
         this._hours.value = value
     }
 
     private val _minutes = MutableStateFlow(0)
-    val minutes: StateFlow<Int> = _minutes
 
     fun onChangeMinutes(value: Int) {
         this._minutes.value = value

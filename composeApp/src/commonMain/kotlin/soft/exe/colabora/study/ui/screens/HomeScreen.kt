@@ -105,7 +105,7 @@ fun HomeScreen(
         ) {
 
             //Head
-            Header(userData = controller.userData, isLoading = load.isLoad)
+            Header(userData = controller.userData)
 
             // Body
             Spacer(Modifier.height(20.dp))
@@ -243,7 +243,7 @@ fun HomeScreen(
 }
 
 @Composable
-private fun Header(userData: UserData?, isLoading: Boolean) {
+private fun Header(userData: UserData?) {
     Row(
         modifier = Modifier.height(50.dp),
         verticalAlignment = Alignment.CenterVertically

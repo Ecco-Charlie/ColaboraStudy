@@ -5,4 +5,4 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 @SerialName("REGISTRY_SUCCESS")
-class RegistrySuccess : Message()
+object RegistrySuccess : Message()
