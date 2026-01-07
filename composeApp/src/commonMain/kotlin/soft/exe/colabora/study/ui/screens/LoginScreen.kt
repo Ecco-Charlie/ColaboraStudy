@@ -23,6 +23,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -43,12 +44,10 @@ import colaborastudy.composeapp.generated.resources.your_username
 import com.attafitamim.krop.ui.ImageCropperDialog
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.resources.vectorResource
-import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.koin.compose.viewmodel.koinViewModel
 import soft.exe.colabora.study.core.controllers.LoginController
 import soft.exe.colabora.study.ui.navigation.NavigationEvent
 
-@Preview
 @Composable
 fun LoginScreen(
     controller: LoginController = koinViewModel(),
@@ -66,7 +65,9 @@ fun LoginScreen(
         }
     }
 
-    Scaffold {
+    Scaffold(
+        snackbarHost = { SnackbarHost(controller.snackState) }
+    ) {
 
         if (cropState != null)
         {

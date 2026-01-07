@@ -1,10 +1,14 @@
 package soft.exe.colabora.study.core.controllers
 
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.decodeToImageBitmap
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import colaborastudy.composeapp.generated.resources.Res
+import colaborastudy.composeapp.generated.resources.an_unexpected_error
+import colaborastudy.composeapp.generated.resources.image_too_large
+import colaborastudy.composeapp.generated.resources.username_cannot_empty
 import com.attafitamim.krop.core.crop.CropError
 import com.attafitamim.krop.core.crop.CropResult
 import com.attafitamim.krop.core.crop.crop
@@ -24,6 +28,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
+import org.jetbrains.compose.resources.getString
 import soft.exe.colabora.study.core.entity.UserData
 import soft.exe.colabora.study.core.service.UserDataService
 import soft.exe.colabora.study.core.utils.LoadState
@@ -46,6 +51,8 @@ class LoginController(private val udService: UserDataService) : ViewModel() {
     private val _navEvent: Channel<NavigationEvent> = Channel()
     val navEvent = _navEvent.receiveAsFlow()
 
+    val snackState = SnackbarHostState()
+
     init {
         viewModelScope.launch {
             val defPicture = Res.readBytes("drawable/unknow_user.jpg")
@@ -61,12 +68,16 @@ class LoginController(private val udService: UserDataService) : ViewModel() {
         viewModelScope.launch {
             val selectedImage = FileKit.openFilePicker(type = FileKitType.Image)?: return@launch
             if (selectedImage.size() > 5242880) {
+                snackState.showSnackbar(getString(Res.string.image_too_large))
                 return@launch
             }
             val selectedImageSrc = selectedImage.toImageSrc()
             when (val res = imageCropper.crop(selectedImageSrc)) {
                 CropResult.Cancelled -> { return@launch }
-                is CropError -> { return@launch }
+                is CropError -> {
+                    snackState.showSnackbar(getString(Res.string.an_unexpected_error))
+                    return@launch
+                }
                 is CropResult.Success -> {
                     _image.value = null
                     _image.value = res.bitmap
@@ -77,6 +88,9 @@ class LoginController(private val udService: UserDataService) : ViewModel() {
 
     fun saveUserData() {
         if (_username.value.isEmpty()) {
+            viewModelScope.launch {
+                snackState.showSnackbar(getString(Res.string.username_cannot_empty))
+            }
             return
         }
         _load.value = LoadState.Load

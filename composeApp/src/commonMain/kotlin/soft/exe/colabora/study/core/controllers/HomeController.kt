@@ -1,5 +1,6 @@
 package soft.exe.colabora.study.core.controllers
 
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -8,8 +9,12 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import colaborastudy.composeapp.generated.resources.Res
 import colaborastudy.composeapp.generated.resources.base_prompt
+import colaborastudy.composeapp.generated.resources.description_not_empty
+import colaborastudy.composeapp.generated.resources.fill_ip
+import colaborastudy.composeapp.generated.resources.no_possible_connect_exam
 import colaborastudy.composeapp.generated.resources.text_image_prompt
 import colaborastudy.composeapp.generated.resources.text_prompt
+import colaborastudy.composeapp.generated.resources.time_cannot_less_60
 import colaborastudy.composeapp.generated.resources.wait_start
 import io.github.vinceglb.filekit.FileKit
 import io.github.vinceglb.filekit.dialogs.FileKitType
@@ -98,6 +103,8 @@ class HomeController(
         this._ip.value = value
     }
 
+    val snackState = SnackbarHostState()
+
     init {
         viewModelScope.launch {
             val ud = udService.instance
@@ -114,8 +121,18 @@ class HomeController(
     fun generateQuestions() {
         this._load.value = LoadState.Load
         val timeInSeconds = (_minutes.value * 60) + (_hours.value * 3600)
-        if (this._description.value.isEmpty() || timeInSeconds < 60)
+        if (this._description.value.isEmpty() || this._description.value.length < 10) {
+            viewModelScope.launch {
+                snackState.showSnackbar(getString(Res.string.description_not_empty))
+            }
             return
+        }
+        if (timeInSeconds < 60) {
+            viewModelScope.launch {
+                snackState.showSnackbar(getString(Res.string.time_cannot_less_60))
+            }
+            return
+        }
         val type = if (this._photo.value != null) Res.string.text_image_prompt
                     else Res.string.text_prompt
         viewModelScope.launch {
@@ -135,8 +152,12 @@ class HomeController(
     }
 
     fun connectToExam() {
-        this._load.value = LoadState.Load
         viewModelScope.launch {
+            if (_ip.value.isEmpty()) {
+                snackState.showSnackbar(getString(Res.string.fill_ip))
+                return@launch
+            }
+            _load.value = LoadState.Load
             try {
                 withContext(Dispatchers.IO) {
                     KoinPlatform.getKoin().get<ConnectionClient>().connectToServer(_ip.value)
@@ -144,6 +165,7 @@ class HomeController(
                 _navEvent.send(NavigationEvent.NavigateToAndClear(Wait(text = getString(Res.string.wait_start))))
             } catch (_: Exception) {
                 _load.value = LoadState.Ok
+                snackState.showSnackbar(getString(Res.string.no_possible_connect_exam))
             }
         }
     }

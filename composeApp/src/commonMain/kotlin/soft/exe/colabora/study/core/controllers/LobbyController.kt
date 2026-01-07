@@ -1,7 +1,11 @@
 package soft.exe.colabora.study.core.controllers
 
+import androidx.compose.material3.SnackbarHostState
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import colaborastudy.composeapp.generated.resources.Res
+import colaborastudy.composeapp.generated.resources.exam_cannot_have_0
+import colaborastudy.composeapp.generated.resources.questions_no_yet_load
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
 import kotlinx.coroutines.channels.Channel
@@ -10,6 +14,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import org.jetbrains.compose.resources.getString
 import soft.exe.colabora.study.core.entity.ServerPlayer
 import soft.exe.colabora.study.core.service.ConnectionClient
 import soft.exe.colabora.study.core.service.ConnectionService
@@ -51,6 +56,8 @@ class LobbyController(
         }
     }
 
+    val snackState = SnackbarHostState()
+
     init {
         viewModelScope.launch {
             questionsService.questions.collect { questions ->
@@ -66,8 +73,18 @@ class LobbyController(
 
     fun startGame() {
         val numOfQuestions = this.questionsService.questions.value.size
-        if (this.players.value.isEmpty() || numOfQuestions == 0)
+        if (numOfQuestions == 0) {
+            viewModelScope.launch {
+                snackState.showSnackbar(getString(Res.string.questions_no_yet_load))
+            }
             return
+        }
+        if (this.players.value.isEmpty()) {
+            viewModelScope.launch {
+                snackState.showSnackbar(getString(Res.string.exam_cannot_have_0))
+            }
+            return
+        }
         viewModelScope.launch {
             connectionService.startGame(numOfQuestions, questionsService.totalTimeInSeconds)
         }

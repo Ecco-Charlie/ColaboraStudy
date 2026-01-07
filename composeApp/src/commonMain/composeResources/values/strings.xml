@@ -89,4 +89,13 @@
     <string name="wait_start">Waiting for the exam to start...</string>
     <string name="waiting_exam_end">Waiting for the exam to end</string>
     <string name="time_remaining">Time remaining: </string>
+    <string name="image_too_large">The image is too large (Maximum 5MB)</string>
+    <string name="an_unexpected_error">An unexpected error occurred, please try again</string>
+    <string name="username_cannot_empty">The username cannot be empty</string>
+    <string name="description_not_empty">The description must not be empty (minimum 10 characters)</string>
+    <string name="time_cannot_less_60">The time cannot be less than 60 seconds</string>
+    <string name="fill_ip">Please fill in the IP field</string>
+    <string name="no_possible_connect_exam">It was not possible to connect to the exam</string>
+    <string name="exam_cannot_have_0">The exam cannot have 0 participants</string>
+    <string name="questions_no_yet_load">The questions have not yet loaded</string>
 </resources>

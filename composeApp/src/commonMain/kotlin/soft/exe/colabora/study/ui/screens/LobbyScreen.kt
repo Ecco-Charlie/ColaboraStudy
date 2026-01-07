@@ -18,6 +18,7 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -63,7 +64,9 @@ fun LobbyScreen(
         controller.navEvent.collect { onNavigate(it) }
     }
 
-    Scaffold { innerPadding ->
+    Scaffold (
+        snackbarHost = { SnackbarHost(controller.snackState) }
+    ) { innerPadding ->
         Column(
             modifier = Modifier.padding(innerPadding).padding(vertical = 20.dp, horizontal = 40.dp).fillMaxWidth(),
             horizontalAlignment = Alignment.CenterHorizontally
