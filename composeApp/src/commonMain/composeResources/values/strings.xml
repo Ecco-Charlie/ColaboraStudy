@@ -47,6 +47,7 @@
                 "question": "string (may contain Markdown)",
                 "answers": [
                     {
+                        "id": number
                         "text": "string (may contain Markdown)",
                         "correct": boolean
                     }
