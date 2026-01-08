@@ -21,6 +21,9 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -49,6 +52,7 @@ fun ResultsServerScreen(
 
     val players by controller.players.collectAsStateWithLifecycle()
     val timeRemaining by controller.timeRemaining.collectAsStateWithLifecycle()
+    var showResultsButton by remember { mutableStateOf(true) }
 
     LaunchedEffect(true) {
         controller.navEvent.collect {
@@ -134,8 +138,11 @@ fun ResultsServerScreen(
                 }
                 Spacer(Modifier.width(10.dp))
                 Button(
-                    onClick = controller::showResults,
-                    enabled = (players.indexOfFirst { !it.finished } == -1)
+                    onClick = {
+                        controller.showResults()
+                        showResultsButton = false
+                    },
+                    enabled = ((players.indexOfFirst { !it.finished } == -1)  && showResultsButton)
                 ) {
                     Text(
                         text = stringResource(Res.string.show_results),

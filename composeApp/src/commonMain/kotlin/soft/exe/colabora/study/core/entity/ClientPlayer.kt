@@ -85,8 +85,10 @@ class ClientPlayer(connection: Socket) : Player(connection) {
                     this._time.value = message.time
             }
             is TimeOut -> {
-                this._finish.value = true
-                this.send(FinishExam(this.questionAnswers, this.time.value))
+                if (this._finish.value) {
+                    this.send(FinishExam(this.questionAnswers, this.time.value))
+                    this._finish.value = true
+                }
             }
             is ShowResults -> {
                 this._finish.value = false

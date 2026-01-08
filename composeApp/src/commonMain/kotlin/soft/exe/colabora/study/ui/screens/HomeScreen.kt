@@ -125,7 +125,8 @@ fun HomeScreen(
                         Text(
                             text = "xxx.xxx.xx.x"
                         )
-                    }
+                    },
+                    singleLine = true
                 )
                 Spacer(Modifier.height(10.dp))
                 Button(
