@@ -56,6 +56,7 @@ kotlin {
             implementation(libs.datetime.wheel.picker)
             implementation(libs.ktor.network)
             implementation(libs.multiplatform.markdown.renderer.m3)
+            implementation(libs.generativeai.google)
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)
