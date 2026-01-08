@@ -1,5 +1,7 @@
+import com.codingfeline.buildkonfig.compiler.FieldSpec.Type
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import java.util.Properties
 
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
@@ -8,6 +10,7 @@ plugins {
     alias(libs.plugins.composeCompiler)
     alias(libs.plugins.composeHotReload)
     kotlin("plugin.serialization") version "2.3.0"
+    id("com.codingfeline.buildkonfig")
 }
 
 kotlin {
@@ -117,5 +120,31 @@ compose.desktop {
                 iconFile.set(project.file("src/commonMain/composeResources/drawable/icons/logo_bitmap.icns"))
             }
         }
+    }
+}
+
+buildkonfig {
+    packageName = "soft.exe.colabora.study"
+
+    val geminiPropertiesFile = rootProject.file("gemini.properties")
+    var geminiProperties = Properties()
+    if (geminiPropertiesFile.exists())
+        geminiProperties.load(geminiPropertiesFile.inputStream())
+
+    val GEMINI_API_KEY: String? = geminiProperties.getProperty("GEMINI_API_KEY")
+    val GEMINI_MODEL: String = geminiProperties.getProperty("GEMINI_MODEL") ?: "gemini-2.0-flash"
+
+    defaultConfigs {
+        buildConfigField(
+            type = Type.STRING,
+            name = "GEMINI_API_KEY",
+            value = GEMINI_API_KEY,
+            nullable = true
+        )
+        buildConfigField(
+            type = Type.STRING,
+            name = "GEMINI_MODEL",
+            value = GEMINI_MODEL
+        )
     }
 }
