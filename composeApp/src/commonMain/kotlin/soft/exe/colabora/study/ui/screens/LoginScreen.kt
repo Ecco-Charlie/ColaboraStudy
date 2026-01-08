@@ -39,6 +39,7 @@ import colaborastudy.composeapp.generated.resources.camera_icon
 import colaborastudy.composeapp.generated.resources.create_profile
 import colaborastudy.composeapp.generated.resources.next
 import colaborastudy.composeapp.generated.resources.tap_to_add_avatar
+import colaborastudy.composeapp.generated.resources.trash
 import colaborastudy.composeapp.generated.resources.username
 import colaborastudy.composeapp.generated.resources.your_username
 import com.attafitamim.krop.ui.ImageCropperDialog
@@ -113,10 +114,11 @@ fun LoginScreen(
                         contentColor = MaterialTheme.colorScheme.onPrimary
                     ),
                     modifier = Modifier.size(50.dp),
-                    elevation = CardDefaults.elevatedCardElevation(defaultElevation = 4.dp)
+                    elevation = CardDefaults.elevatedCardElevation(defaultElevation = 4.dp),
+                    onClick = { if (!controller.imageDefault) controller.removeImage() }
                 ) {
                     Icon(
-                        vectorResource(Res.drawable.camera_icon),
+                        imageVector = vectorResource( if (controller.imageDefault) Res.drawable.camera_icon else Res.drawable.trash),
                         contentDescription = "Camera Icon",
                         modifier = Modifier.fillMaxSize().padding(8.dp)
                     )

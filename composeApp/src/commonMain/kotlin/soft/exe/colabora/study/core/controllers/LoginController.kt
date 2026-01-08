@@ -43,6 +43,9 @@ class LoginController(private val udService: UserDataService) : ViewModel() {
     private val _image = MutableStateFlow<ImageBitmap?>(null)
     val image: StateFlow<ImageBitmap?> = _image
 
+    var imageDefault: Boolean = true
+        private set
+
     val imageCropper = imageCropper()
 
     private val _load = MutableStateFlow<LoadState>(LoadState.Ok)
@@ -79,10 +82,19 @@ class LoginController(private val udService: UserDataService) : ViewModel() {
                     return@launch
                 }
                 is CropResult.Success -> {
+                    imageDefault = false
                     _image.value = null
                     _image.value = res.bitmap
                 }
             }
+        }
+    }
+
+    fun removeImage() {
+        imageDefault = true
+        viewModelScope.launch {
+            val defPicture = Res.readBytes("drawable/unknow_user.jpg")
+            _image.value = defPicture.decodeToImageBitmap()
         }
     }
 
