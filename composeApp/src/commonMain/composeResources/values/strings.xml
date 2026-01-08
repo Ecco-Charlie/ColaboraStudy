@@ -85,7 +85,6 @@
     <string name="finish_exam">Finish the exam</string>
     <string name="join_exam">Join an exam</string>
     <string name="join">Join</string>
-    <string name="connection_address">Connection address</string>
     <string name="wait_start">Waiting for the exam to start...</string>
     <string name="waiting_exam_end">Waiting for the exam to end</string>
     <string name="time_remaining">Time remaining: </string>
@@ -99,4 +98,5 @@
     <string name="exam_cannot_have_0">The exam cannot have 0 participants</string>
     <string name="questions_no_yet_load">The questions have not yet loaded</string>
     <string name="show_results">Show results</string>
+    <string name="connection_number">Connection number</string>
 </resources>

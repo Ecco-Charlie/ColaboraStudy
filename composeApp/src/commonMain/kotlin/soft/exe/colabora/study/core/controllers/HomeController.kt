@@ -35,6 +35,7 @@ import soft.exe.colabora.study.core.service.ConnectionClient
 import soft.exe.colabora.study.core.service.QuestionsService
 import soft.exe.colabora.study.core.service.UserDataService
 import soft.exe.colabora.study.core.utils.LoadState
+import soft.exe.colabora.study.core.utils.getIp
 import soft.exe.colabora.study.ui.navigation.Lobby
 import soft.exe.colabora.study.ui.navigation.Login
 import soft.exe.colabora.study.ui.navigation.NavigationEvent
@@ -160,7 +161,9 @@ class HomeController(
             _load.value = LoadState.Load
             try {
                 withContext(Dispatchers.IO) {
-                    KoinPlatform.getKoin().get<ConnectionClient>().connectToServer(_ip.value)
+                    val ipC = getIp(_ip.value.toInt())
+                    require(ipC != null)
+                    KoinPlatform.getKoin().get<ConnectionClient>().connectToServer(ipC)
                 }
                 _navEvent.send(NavigationEvent.NavigateToAndClear(Wait(text = getString(Res.string.wait_start))))
             } catch (_: Exception) {

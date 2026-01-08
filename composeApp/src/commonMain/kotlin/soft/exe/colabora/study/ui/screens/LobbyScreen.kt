@@ -34,7 +34,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import colaborastudy.composeapp.generated.resources.Res
-import colaborastudy.composeapp.generated.resources.connection_address
+import colaborastudy.composeapp.generated.resources.connection_number
 import colaborastudy.composeapp.generated.resources.everything_ready
 import colaborastudy.composeapp.generated.resources.loading_questions
 import colaborastudy.composeapp.generated.resources.no_one_online
@@ -44,7 +44,7 @@ import colaborastudy.composeapp.generated.resources.start_game
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 import soft.exe.colabora.study.core.controllers.LobbyController
-import soft.exe.colabora.study.core.utils.getLocalIpAddress
+import soft.exe.colabora.study.core.utils.getIpClient
 import soft.exe.colabora.study.ui.components.PlayerOnline
 import soft.exe.colabora.study.ui.components.TitleText
 import soft.exe.colabora.study.ui.navigation.NavigationEvent
@@ -58,7 +58,7 @@ fun LobbyScreen(
     val load by controller.load.collectAsStateWithLifecycle()
     val players by controller.players.collectAsStateWithLifecycle()
     val participate by controller.participate.collectAsStateWithLifecycle()
-    val ip = remember { getLocalIpAddress() }
+    val ip = remember { getIpClient() }
 
     LaunchedEffect(true) {
         controller.navEvent.collect { onNavigate(it) }
@@ -135,7 +135,7 @@ fun LobbyScreen(
             Spacer(Modifier.height(10.dp))
             Text(
                 text = buildAnnotatedString {
-                    append(stringResource(Res.string.connection_address))
+                    append(stringResource(Res.string.connection_number))
                     append(": ")
                     withStyle(
                         style = SpanStyle(

@@ -19,6 +19,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
@@ -40,6 +41,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
@@ -49,6 +51,7 @@ import colaborastudy.composeapp.generated.resources.Res
 import colaborastudy.composeapp.generated.resources.add_photo
 import colaborastudy.composeapp.generated.resources.click_to_photo
 import colaborastudy.composeapp.generated.resources.colabora_study
+import colaborastudy.composeapp.generated.resources.connection_number
 import colaborastudy.composeapp.generated.resources.create_exam
 import colaborastudy.composeapp.generated.resources.describe_topic
 import colaborastudy.composeapp.generated.resources.difficulties
@@ -123,10 +126,13 @@ fun HomeScreen(
                     modifier = Modifier.fillMaxWidth(),
                     placeholder = {
                         Text(
-                            text = "xxx.xxx.xx.x"
+                            text = stringResource(Res.string.connection_number)
                         )
                     },
-                    singleLine = true
+                    singleLine = true,
+                    keyboardOptions = KeyboardOptions(
+                        keyboardType = KeyboardType.Number
+                    )
                 )
                 Spacer(Modifier.height(10.dp))
                 Button(
