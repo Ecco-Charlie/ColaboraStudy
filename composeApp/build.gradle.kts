@@ -105,6 +105,15 @@ compose.desktop {
             targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
             packageName = "soft.exe.colabora.study"
             packageVersion = "1.0.0"
+            linux {
+                iconFile.set(project.file("src/commonMain/composeResources/drawable/icons/logo_bitmap.png"))
+            }
+            windows {
+                iconFile.set(project.file("src/commonMain/composeResources/drawable/icons/logo_bitmap.ico"))
+            }
+            macOS {
+                iconFile.set(project.file("src/commonMain/composeResources/drawable/icons/logo_bitmap.icns"))
+            }
         }
     }
 }
