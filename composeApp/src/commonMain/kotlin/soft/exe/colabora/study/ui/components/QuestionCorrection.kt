@@ -56,7 +56,7 @@ private fun AnswerField(
     color: Color = if (selected) MaterialTheme.colorScheme.secondary.copy(alpha = 0.5f) else MaterialTheme.colorScheme.error.copy(alpha = 0.5f)
 ) {
     Row(
-        modifier = Modifier.height(56.dp).clip(MaterialTheme.shapes.medium)
+        modifier = Modifier.clip(MaterialTheme.shapes.medium)
             .background(
                 color = color
             ).padding(10.dp),
