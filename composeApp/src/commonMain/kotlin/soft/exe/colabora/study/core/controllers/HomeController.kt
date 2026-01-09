@@ -211,4 +211,8 @@ class HomeController(
         }
     }
 
+    fun removePhoto() {
+        this._photo.value = null
+    }
+
 }

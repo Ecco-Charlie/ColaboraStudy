@@ -22,6 +22,8 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -70,6 +72,7 @@ import colaborastudy.composeapp.generated.resources.select_clst_file
 import colaborastudy.composeapp.generated.resources.select_file
 import colaborastudy.composeapp.generated.resources.start_game
 import colaborastudy.composeapp.generated.resources.topic_description
+import colaborastudy.composeapp.generated.resources.trash
 import colaborastudy.composeapp.generated.resources.upload
 import colaborastudy.composeapp.generated.resources.upload_photo
 import dev.darkokoa.datetimewheelpicker.WheelTimePicker
@@ -193,7 +196,8 @@ fun HomeScreen(
             ) {
                 UploadImage(
                     photo = photo,
-                    onClick = controller::changePhoto
+                    onClick = controller::changePhoto,
+                    removePhoto = controller::removePhoto
                 )
             }
 
@@ -346,7 +350,8 @@ private fun Header(userData: UserData?) {
 private fun UploadImage(
     accentColor: Color = MaterialTheme.colorScheme.onSurfaceVariant,
     onClick: () -> Unit,
-    photo: ImageBitmap?
+    photo: ImageBitmap?,
+    removePhoto: () -> Unit
 ) {
     Box (
         modifier = Modifier
@@ -361,45 +366,69 @@ private fun UploadImage(
             .aspectRatio(1.5f)
             .clickable(onClick = onClick)
     ) {
-        Column(
-            modifier = Modifier.fillMaxSize().padding(35.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
+        Box(
+            contentAlignment = Alignment.TopEnd
         ) {
-            if (photo == null) {
-                Icon(
-                    vectorResource(Res.drawable.add_photo),
-                    contentDescription = "Add photo",
-                    modifier = Modifier.size(50.dp),
-                    tint = accentColor
-                )
-                Spacer(Modifier.height(5.dp))
-                Text(
-                    text = stringResource(Res.string.click_to_photo),
-                    fontWeight = FontWeight.Bold,
-                    color = accentColor
-                )
-                Spacer(Modifier.weight(1f))
-                Row(
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
+            Column(
+                modifier = Modifier.fillMaxSize().padding(35.dp),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center
+            ) {
+                if (photo == null) {
                     Icon(
-                        vectorResource(Res.drawable.upload),
-                        contentDescription = "Upload photo",
-                        modifier = Modifier.size(30.dp),
+                        vectorResource(Res.drawable.add_photo),
+                        contentDescription = "Add photo",
+                        modifier = Modifier.size(50.dp),
                         tint = accentColor
                     )
+                    Spacer(Modifier.height(5.dp))
                     Text(
-                        text = stringResource(Res.string.select_file),
+                        text = stringResource(Res.string.click_to_photo),
+                        fontWeight = FontWeight.Bold,
                         color = accentColor
                     )
+                    Spacer(Modifier.weight(1f))
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Icon(
+                            vectorResource(Res.drawable.upload),
+                            contentDescription = "Upload photo",
+                            modifier = Modifier.size(30.dp),
+                            tint = accentColor
+                        )
+                        Text(
+                            text = stringResource(Res.string.select_file),
+                            color = accentColor
+                        )
+                    }
+                } else {
+                    Image(
+                        photo,
+                        contentDescription = "Photo reference"
+                    )
                 }
-            } else {
-                Image(
-                    photo,
-                    contentDescription = "Photo reference"
-                )
             }
+
+            if (photo != null) {
+                Card(
+                    shape = CircleShape,
+                    colors = CardDefaults.cardColors(
+                        containerColor = MaterialTheme.colorScheme.primary,
+                        contentColor = MaterialTheme.colorScheme.onPrimary
+                    ),
+                    modifier = Modifier.size(60.dp).padding(10.dp),
+                    elevation = CardDefaults.elevatedCardElevation(defaultElevation = 4.dp),
+                    onClick = removePhoto
+                ) {
+                    Icon(
+                        imageVector = vectorResource(Res.drawable.trash),
+                        contentDescription = "Trash Icon",
+                        modifier = Modifier.fillMaxSize().padding(8.dp)
+                    )
+                }
+            }
+
         }
     }
 }
