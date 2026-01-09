@@ -29,7 +29,7 @@
         %5$s
         General conditions:
         - Difficulty: %3$d out of 2
-        - Estimated time per question: %4$d minutes
+        - Estimated time per question: %4$d seconds
         - Do not include explanations or solutions
         - Do not copy content verbatim
         - Vary the focus of the questions
@@ -100,4 +100,5 @@
     <string name="questions_no_yet_load">The questions have not yet loaded</string>
     <string name="show_results">Show results</string>
     <string name="connection_number">Connection number</string>
+    <string name="error_while_questions">An error occurred while loading questions</string>
 </resources>

@@ -72,7 +72,7 @@ class LobbyController(
     }
 
     fun startGame() {
-        val numOfQuestions = this.questionsService.questions.value.size
+        val numOfQuestions = this.questionsService.numOfQuestions
         if (numOfQuestions == 0) {
             viewModelScope.launch {
                 snackState.showSnackbar(getString(Res.string.questions_no_yet_load))

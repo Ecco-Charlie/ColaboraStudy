@@ -3,6 +3,7 @@ package soft.exe.colabora.study.core.service
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import soft.exe.colabora.study.BuildKonfig
+import soft.exe.colabora.study.core.entity.PromptParameters
 import soft.exe.colabora.study.core.entity.Question
 import soft.exe.colabora.study.core.entity.QuestionAnswer
 import soft.exe.colabora.study.core.entity.QuestionResult
@@ -20,11 +21,14 @@ class QuestionsService {
         return this._questions.value[index]
     }
 
-    var totalTimeInSeconds: Int = 0
+    private var promptParameters: PromptParameters? = null
 
-    fun setTime(value: Int) {
-        this.totalTimeInSeconds = value
+    fun setPromptParameters(pp: PromptParameters) {
+        this.promptParameters = pp
     }
+
+    val numOfQuestions: Int get() = this.promptParameters?.numOfQuestions ?: 0
+    val totalTimeInSeconds: Int get() = this.promptParameters?.totalTime ?: 0
 
     private val questionsRepository: QuestionsRepository
 
@@ -36,8 +40,9 @@ class QuestionsService {
             LocalQuestionsRepository()
     }
 
-    suspend fun loadQuestions(prompt: String) {
-        this._questions.value = questionsRepository.getQuestions(prompt)
+    suspend fun loadQuestions() {
+        require(this.promptParameters != null)
+        this._questions.value = questionsRepository.getQuestions(this.promptParameters!!.buildPrompt())
     }
 
     suspend fun evaluateExam(questionAnswers: List<QuestionAnswer>, onFinished: suspend (ExamResults) -> Unit) {

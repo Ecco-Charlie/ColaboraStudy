@@ -8,16 +8,15 @@ import androidx.compose.ui.graphics.ImageBitmap
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import colaborastudy.composeapp.generated.resources.Res
-import colaborastudy.composeapp.generated.resources.base_prompt
 import colaborastudy.composeapp.generated.resources.description_not_empty
+import colaborastudy.composeapp.generated.resources.error_while_questions
 import colaborastudy.composeapp.generated.resources.fill_ip
 import colaborastudy.composeapp.generated.resources.no_possible_connect_exam
-import colaborastudy.composeapp.generated.resources.text_image_prompt
-import colaborastudy.composeapp.generated.resources.text_prompt
 import colaborastudy.composeapp.generated.resources.time_cannot_less_60
 import colaborastudy.composeapp.generated.resources.wait_start
 import io.github.vinceglb.filekit.FileKit
 import io.github.vinceglb.filekit.dialogs.FileKitType
+import io.github.vinceglb.filekit.dialogs.compose.util.encodeToByteArray
 import io.github.vinceglb.filekit.dialogs.compose.util.toImageBitmap
 import io.github.vinceglb.filekit.dialogs.openFilePicker
 import kotlinx.coroutines.Dispatchers
@@ -30,6 +29,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.jetbrains.compose.resources.getString
 import org.koin.mp.KoinPlatform
+import soft.exe.colabora.study.core.entity.PromptParameters
 import soft.exe.colabora.study.core.entity.UserData
 import soft.exe.colabora.study.core.service.ConnectionClient
 import soft.exe.colabora.study.core.service.QuestionsService
@@ -134,21 +134,23 @@ class HomeController(
             return
         }
         this._load.value = LoadState.Load
-        val type = if (this._photo.value != null) Res.string.text_image_prompt
-                    else Res.string.text_prompt
         viewModelScope.launch {
-            val prompt = getString(
-                Res.string.base_prompt,
-                _numOfQuestions.value.toInt(),
-                _description.value,
-                _difficulty.value.toInt(),
-                ((_minutes.value+(_hours.value*60)) / _numOfQuestions.value.toInt()),
-                getString(type)
-            )
-            _navEvent.send(NavigationEvent.NavigateTo(Lobby))
             val qs = KoinPlatform.getKoin().get<QuestionsService>()
-            qs.loadQuestions(prompt)
-            qs.setTime(timeInSeconds)
+            qs.setPromptParameters(PromptParameters(
+                numOfQuestions = _numOfQuestions.value.toInt(),
+                description = _description.value,
+                difficulty = _difficulty.value.toInt(),
+                totalTime = timeInSeconds,
+                referencePhoto = _photo.value?.encodeToByteArray()
+            ))
+            try {
+                withContext(Dispatchers.Unconfined) {
+                    qs.loadQuestions()
+                }
+                _navEvent.send(NavigationEvent.NavigateTo(Lobby))
+            } catch(_: Exception) {
+                snackState.showSnackbar(getString(Res.string.error_while_questions))
+            }
         }
     }
 
