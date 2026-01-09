@@ -1,5 +1,7 @@
 package soft.exe.colabora.study.core.entity
 
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateOf
 import io.ktor.network.sockets.Socket
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -24,10 +26,14 @@ import soft.exe.colabora.study.core.service.UserDataService
 
 class ClientPlayer(connection: Socket) : Player(connection) {
 
-    private var currentIndexQuestion: Int = -1
+    var currentIndexQuestion: MutableState<Int> = mutableStateOf(-1)
+        private set
 
     var numOfQuestions: Int = 0
+        private set
+
     var totalTimeInSeconds: Int = 0
+        private set
 
     private val _currentQuestion: MutableStateFlow<Question?> = MutableStateFlow(null)
     var currentQuestion: StateFlow<Question?> = _currentQuestion
@@ -100,14 +106,14 @@ class ClientPlayer(connection: Socket) : Player(connection) {
     }
 
     suspend fun requestQuestion() {
-        this.currentIndexQuestion += 1
+        this.currentIndexQuestion.value += 1
         this._currentQuestion.value = null
-        if (this.currentIndexQuestion >= this.numOfQuestions) {
+        if (this.currentIndexQuestion.value >= this.numOfQuestions) {
             this._finish.value = true
             this.send(FinishExam(this.questionAnswers, this.time.value  ))
             return
         }
-        this.send(RequestQuestion(this.currentIndexQuestion))
+        this.send(RequestQuestion(this.currentIndexQuestion.value))
     }
 
     fun addQuestionAnswer(questionAnswer: QuestionAnswer) {

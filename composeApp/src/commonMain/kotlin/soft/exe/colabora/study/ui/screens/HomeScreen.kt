@@ -93,6 +93,7 @@ import soft.exe.colabora.study.ui.navigation.NavigationEvent
 @Composable
 fun HomeScreen(
     controller: HomeController = koinViewModel(),
+    reason: String? = null,
     onNavigate: (NavigationEvent) -> Unit
 ) {
     val load by controller.load.collectAsState()
@@ -106,6 +107,10 @@ fun HomeScreen(
 
     LaunchedEffect(true) {
         controller.navEvent.collect { onNavigate(it) }
+    }
+
+    LaunchedEffect(Unit) {
+        reason?.let{ controller.snackState.showSnackbar(it) }
     }
 
     Scaffold(

@@ -21,6 +21,7 @@ import soft.exe.colabora.study.core.service.ConnectionService
 import soft.exe.colabora.study.core.service.QuestionsService
 import soft.exe.colabora.study.core.utils.LoadState
 import soft.exe.colabora.study.ui.navigation.Exam
+import soft.exe.colabora.study.ui.navigation.HomeReason
 import soft.exe.colabora.study.ui.navigation.NavigationEvent
 import soft.exe.colabora.study.ui.navigation.ResultsServer
 
@@ -69,10 +70,15 @@ class LobbyController(
         viewModelScope.launch {
             connectionService.startServer()
         }
+        viewModelScope.launch {
+            questionsService.generationError.collect {
+                _navEvent.send(NavigationEvent.NavigateToAndClear(HomeReason(reason = it)))
+            }
+        }
     }
 
     fun startGame() {
-        val numOfQuestions = this.questionsService.questions.value.size
+        val numOfQuestions = this.questionsService.numOfQuestions
         if (numOfQuestions == 0) {
             viewModelScope.launch {
                 snackState.showSnackbar(getString(Res.string.questions_no_yet_load))

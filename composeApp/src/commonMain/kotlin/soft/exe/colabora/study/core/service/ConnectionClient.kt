@@ -1,5 +1,6 @@
 package soft.exe.colabora.study.core.service
 
+import androidx.compose.runtime.MutableState
 import io.ktor.network.selector.SelectorManager
 import io.ktor.network.sockets.Socket
 import io.ktor.network.sockets.aSocket
@@ -38,6 +39,8 @@ class ConnectionClient {
 
     var totalTimeInSeconds: Int = 0
 
+    lateinit var currentIndexQuestion: MutableState<Int>
+
     suspend fun connectToServer(ip: String) {
         val con: Socket = aSocket(selectorManager).tcp().connect(ip, 9892)
         this.player = ClientPlayer(con)
@@ -50,6 +53,7 @@ class ConnectionClient {
         this.start = player!!.start
         this.totalTimeInSeconds = player!!.totalTimeInSeconds
         this.timeRemaining = player!!.timeRemaining
+        this.currentIndexQuestion = player!!.currentIndexQuestion
         scope.launch {
             start.collect {
                 if (!it)

@@ -70,7 +70,7 @@ fun ExamScreen(
                 CircularProgressIndicator()
             } else {
                 Text(
-                    text = "Question: ${question?.id}/${controller.numOfQuestions}",
+                    text = "Question: ${controller.currentIndexQuestion.value+1}/${controller.numOfQuestions}",
                     color = MaterialTheme.colorScheme.primary
                 )
                 Spacer(Modifier.height(30.dp))

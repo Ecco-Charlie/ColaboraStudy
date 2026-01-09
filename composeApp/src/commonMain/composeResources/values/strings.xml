@@ -24,49 +24,71 @@
     <string name="hours">Hours</string>
     <string name="minutes">Minutes</string>
     <string name="base_prompt">
-        Act as a university professor who is an expert in the specified area.
-        Objective: Generate %1$d questions on the topic "%2$s".
-        %5$s
-        General conditions:
-        - Difficulty: %3$d out of 2
-        - Estimated time per question: %4$d minutes
-        - Do not include explanations or solutions
-        - Do not copy content verbatim
-        - Vary the focus of the questions
+Act as a university professor who is an expert in the specified area.
+Objective: Generate %1$d questions on the topic "%2$s".
+%5$s
+General conditions:
+- Difficulty: %3$d out of 2
+- Estimated time per question: %4$d seconds
+- Do not include explanations or solutions
+- Do not copy content verbatim
+- Vary the focus of the questions
 
-        Format and notation:
-        - If the topic is mathematical or formal, use Markdown
-        - The content may include rich text
-        - The result must be valid JSON
+Format and notation:
+- If the topic is mathematical or formal, use Markdown
+- The content may include rich text
+- The result must be valid JSON
 
-        Output format:
-        Returns only JSON with the following structure:
-        [
+Markdown usage rules:
+- Markdown is ALLOWED only inside string values of:
+  - question
+  - answers.text
+- Allowed Markdown elements:
+  - **bold**
+  - *italic*
+  - __underline__
+  - ### titles
+  - > inline annotations
+- Markdown must NOT be used:
+  - Outside string values
+  - In JSON keys
+  - To wrap the full response
+  - Using Markdown code fences (```)
+
+IMPORTANT:
+- The JSON structure must remain valid
+- Markdown must not break JSON syntax
+- The response must start with [ and end with ]
+
+Output format:
+Returns only JSON with the following structure:
+[
+    {
+        "id": number,
+        "question": "string (contain Markdown)",
+        "answers": [
             {
-                "id": number,
-                "question": "string (may contain Markdown)",
-                "answers": [
-                    {
-                        "text": "string (may contain Markdown)",
-                        "correct": boolean
-                    }
-                ]
+                "id": number
+                "text": "string (contain Markdown)",
+                "correct": boolean
             }
         ]
+    }
+]
     </string>
     <string name="text_prompt">
-        Entry:
-        Reference information is provided in text only.
+Entry:
+Reference information is provided in text only.
     </string>
     <string name="text_image_prompt">
-        Input:
-        - Text: Defines the topic, difficulty, and format
-        - Image: Corresponds to an actual exam and is used only for reference
+Input:
+- Text: Defines the topic, difficulty, and format
+- Image: Corresponds to an actual exam and is used only for reference
 
-        Use of the image:
-        - Analyze style, format, and level
-        - Do not copy or rephrase questions
-        - Generate new questions based on the analysis.
+Use of the image:
+- Analyze style, format, and level
+- Do not copy or rephrase questions
+- Generate new questions based on the analysis.
     </string>
     <string name="loading_questions">Loading questions...</string>
     <string name="everything_ready">Everything is ready to begin.</string>
@@ -107,4 +129,8 @@
     <string name="select_clst_file">Select a .clst file</string>
     <string name="file">File</string>
     <string name="no_file_selected">No file selected</string>
+    <string name="error_while_questions">An error occurred while loading questions</string>
+    <string name="request_could_not_completed">The request could not be completed due to: </string>
+    <string name="unknow_error">Unknow error</string>
+    <string name="not_possible_obtain_response">It was not possible to obtain a response</string>
 </resources>

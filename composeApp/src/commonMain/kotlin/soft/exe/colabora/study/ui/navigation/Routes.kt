@@ -6,6 +6,9 @@ import kotlinx.serialization.Serializable
 object Home
 
 @Serializable
+data class HomeReason(val reason: String)
+
+@Serializable
 object Login
 
 @Serializable
