@@ -21,6 +21,7 @@ import soft.exe.colabora.study.core.service.ConnectionService
 import soft.exe.colabora.study.core.service.QuestionsService
 import soft.exe.colabora.study.core.utils.LoadState
 import soft.exe.colabora.study.ui.navigation.Exam
+import soft.exe.colabora.study.ui.navigation.HomeReason
 import soft.exe.colabora.study.ui.navigation.NavigationEvent
 import soft.exe.colabora.study.ui.navigation.ResultsServer
 
@@ -71,7 +72,7 @@ class LobbyController(
         }
         viewModelScope.launch {
             questionsService.generationError.collect {
-                
+                _navEvent.send(NavigationEvent.NavigateToAndClear(HomeReason(reason = it)))
             }
         }
     }

@@ -22,6 +22,10 @@ fun NavigationWrapper() {
         composable<Home> {
             HomeScreen { navigateHandle(navController, it) }
         }
+        composable<HomeReason> { backStack ->
+            val reason: HomeReason = backStack.toRoute()
+            HomeScreen(reason = reason.reason) { navigateHandle(navController, it) }
+        }
         composable<Login> {
             LoginScreen { navigateHandle(navController, it) }
         }

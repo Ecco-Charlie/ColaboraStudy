@@ -49,7 +49,11 @@ class QuestionsService {
 
     suspend fun loadQuestions() {
         require(this.promptParameters != null)
-        this._questions.value = questionsRepository.getQuestions(this.promptParameters!!)
+        try {
+            this._questions.value = questionsRepository.getQuestions(this.promptParameters!!)
+        } catch(e: Exception) {
+            _generationError.send(e.message.toString())
+        }
     }
 
     suspend fun evaluateExam(questionAnswers: List<QuestionAnswer>, onFinished: suspend (ExamResults) -> Unit) {

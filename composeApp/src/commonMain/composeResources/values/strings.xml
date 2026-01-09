@@ -39,28 +39,42 @@ Format and notation:
 - The content may include rich text
 - The result must be valid JSON
 
+Markdown usage rules:
+- Markdown is ALLOWED only inside string values of:
+  - question
+  - answers.text
+- Allowed Markdown elements:
+  - **bold**
+  - *italic*
+  - __underline__
+  - ### titles
+  - > inline annotations
+- Markdown must NOT be used:
+  - Outside string values
+  - In JSON keys
+  - To wrap the full response
+  - Using Markdown code fences (```)
+
+IMPORTANT:
+- The JSON structure must remain valid
+- Markdown must not break JSON syntax
+- The response must start with [ and end with ]
+
 Output format:
 Returns only JSON with the following structure:
 [
     {
         "id": number,
-        "question": "string (may contain Markdown)",
+        "question": "string (contain Markdown)",
         "answers": [
             {
                 "id": number
-                "text": "string (may contain Markdown)",
+                "text": "string (contain Markdown)",
                 "correct": boolean
             }
         ]
     }
 ]
-
-IMPORTANT OUTPUT RULES:
-- Return ONLY raw JSON
-- Do NOT wrap the response in Markdown
-- Do NOT use ```json``` or ```
-- Do NOT add explanations, comments, or extra text
-- The response must start with { or [ and end with } or ]
     </string>
     <string name="text_prompt">
 Entry:
