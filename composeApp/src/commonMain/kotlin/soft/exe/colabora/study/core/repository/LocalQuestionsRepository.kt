@@ -1,6 +1,5 @@
 package soft.exe.colabora.study.core.repository
 
-import kotlinx.coroutines.delay
 import soft.exe.colabora.study.core.entity.Answer
 import soft.exe.colabora.study.core.entity.PromptParameters
 import soft.exe.colabora.study.core.entity.Question
@@ -8,10 +7,9 @@ import kotlin.random.Random
 
 class LocalQuestionsRepository : QuestionsRepository {
     override suspend fun getQuestions(prompt: PromptParameters): List<Question> {
-        delay(3000)
         val qR = mutableListOf<Int>()
-        for (i in 0..prompt.numOfQuestions) {
-            val rN = Random.nextInt(0, prompt.numOfQuestions)
+        for (i in 0..<prompt.numOfQuestions) {
+            val rN = Random.nextInt(0, questions.size)
             if(qR.contains(rN))
                 continue
             qR.add(rN)

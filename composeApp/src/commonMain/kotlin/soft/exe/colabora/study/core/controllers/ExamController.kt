@@ -1,5 +1,6 @@
 package soft.exe.colabora.study.core.controllers
 
+import androidx.compose.runtime.MutableState
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import colaborastudy.composeapp.generated.resources.Res
@@ -39,6 +40,8 @@ class ExamController(private val connectionClient: ConnectionClient) : ViewModel
     val time: StateFlow<Float> = connectionClient.timeValue
 
     val timeRemaining: StateFlow<String> = connectionClient.timeRemaining
+
+    val currentIndexQuestion: MutableState<Int> = connectionClient.currentIndexQuestion
 
     init {
         viewModelScope.launch {
