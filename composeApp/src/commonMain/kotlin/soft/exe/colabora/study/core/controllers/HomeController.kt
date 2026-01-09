@@ -144,7 +144,7 @@ class HomeController(
                 referencePhoto = _photo.value?.encodeToByteArray()
             ))
             try {
-                withContext(Dispatchers.Unconfined) {
+                this.launch {
                     qs.loadQuestions()
                 }
                 _navEvent.send(NavigationEvent.NavigateTo(Lobby))

@@ -69,6 +69,11 @@ class LobbyController(
         viewModelScope.launch {
             connectionService.startServer()
         }
+        viewModelScope.launch {
+            questionsService.generationError.collect {
+                
+            }
+        }
     }
 
     fun startGame() {

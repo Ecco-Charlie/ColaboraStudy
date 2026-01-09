@@ -1,7 +1,10 @@
 package soft.exe.colabora.study.core.service
 
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.receiveAsFlow
 import soft.exe.colabora.study.BuildKonfig
 import soft.exe.colabora.study.core.entity.PromptParameters
 import soft.exe.colabora.study.core.entity.Question
@@ -32,6 +35,10 @@ class QuestionsService {
 
     private val questionsRepository: QuestionsRepository
 
+    private val _generationError: Channel<String> = Channel()
+    val generationError: Flow<String> = _generationError.receiveAsFlow()
+
+
     init {
         val geminiApiKey = BuildKonfig.GEMINI_API_KEY
         this.questionsRepository = if (geminiApiKey != null)
@@ -42,7 +49,7 @@ class QuestionsService {
 
     suspend fun loadQuestions() {
         require(this.promptParameters != null)
-        this._questions.value = questionsRepository.getQuestions(this.promptParameters!!.buildPrompt())
+        this._questions.value = questionsRepository.getQuestions(this.promptParameters!!)
     }
 
     suspend fun evaluateExam(questionAnswers: List<QuestionAnswer>, onFinished: suspend (ExamResults) -> Unit) {
