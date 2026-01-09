@@ -1,7 +1,11 @@
 package soft.exe.colabora.study.core.service
 
+import io.github.vinceglb.filekit.PlatformFile
+import io.github.vinceglb.filekit.readString
+import io.ktor.util.decodeBase64String
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.serialization.json.Json
 import soft.exe.colabora.study.core.entity.Answer
 import soft.exe.colabora.study.core.entity.Question
 import soft.exe.colabora.study.core.entity.QuestionAnswer
@@ -53,6 +57,12 @@ class QuestionsService {
             score = score,
             totalNumOfQuestions = this._questions.value.size
         ))
+    }
+
+    suspend fun loadQuestionsFile(file: PlatformFile) {
+        val content = file.readString().decodeBase64String()
+        val questionsFromFile: List<Question> = Json.decodeFromString<List<Question>>(content)
+        this._questions.value = questionsFromFile
     }
 
     suspend fun loadQuestions(prompt: String) {

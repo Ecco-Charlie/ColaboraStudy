@@ -58,17 +58,22 @@ import colaborastudy.composeapp.generated.resources.difficulties
 import colaborastudy.composeapp.generated.resources.difficulty
 import colaborastudy.composeapp.generated.resources.exam_settings
 import colaborastudy.composeapp.generated.resources.exam_time
+import colaborastudy.composeapp.generated.resources.file
 import colaborastudy.composeapp.generated.resources.hours
+import colaborastudy.composeapp.generated.resources.import_clst_file
 import colaborastudy.composeapp.generated.resources.join
 import colaborastudy.composeapp.generated.resources.join_exam
 import colaborastudy.composeapp.generated.resources.minutes
 import colaborastudy.composeapp.generated.resources.number_questions
 import colaborastudy.composeapp.generated.resources.required_field
+import colaborastudy.composeapp.generated.resources.select_clst_file
 import colaborastudy.composeapp.generated.resources.select_file
+import colaborastudy.composeapp.generated.resources.start_game
 import colaborastudy.composeapp.generated.resources.topic_description
 import colaborastudy.composeapp.generated.resources.upload
 import colaborastudy.composeapp.generated.resources.upload_photo
 import dev.darkokoa.datetimewheelpicker.WheelTimePicker
+import io.github.vinceglb.filekit.path
 import kotlinx.datetime.LocalTime
 import org.jetbrains.compose.resources.stringArrayResource
 import org.jetbrains.compose.resources.stringResource
@@ -94,6 +99,7 @@ fun HomeScreen(
     val difficulty by controller.difficulty.collectAsStateWithLifecycle()
     val photo by controller.photo.collectAsStateWithLifecycle()
     val ip by controller.ip.collectAsStateWithLifecycle()
+    val selectedClstFile by controller.selectedClstFile.collectAsStateWithLifecycle()
 
     LaunchedEffect(true) {
         controller.navEvent.collect { onNavigate(it) }
@@ -241,12 +247,66 @@ fun HomeScreen(
             Button(
                 onClick = controller::generateQuestions,
                 modifier = Modifier.widthIn(max = 450.dp).fillMaxWidth(),
+                shape = MaterialTheme.shapes.medium,
+                enabled = !load.isLoad
                 ) {
                 Text(
                     text = stringResource(Res.string.create_exam),
                     fontFamily = MaterialTheme.typography.titleSmall.fontFamily
                 )
             }
+
+            HorizontalDivider(Modifier.padding(vertical = 20.dp))
+            Spacer(Modifier.height(20.dp))
+            TopicContent(
+                title = stringResource(Res.string.import_clst_file),
+                titleSize = 25.sp
+            ) {
+                Button(
+                    onClick = controller::selectClstFile,
+                    modifier = Modifier.fillMaxWidth(),
+                    shape = MaterialTheme.shapes.medium
+                ) {
+                    Text(
+                        text = stringResource(Res.string.select_clst_file),
+                        fontFamily = MaterialTheme.typography.titleSmall.fontFamily
+                    )
+                }
+
+                if (selectedClstFile != null) {
+                    Text(
+                        text = stringResource(Res.string.file) + ": ${selectedClstFile!!.path}"
+                    )
+                }
+
+                Row(
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(stringResource(Res.string.hours))
+                    Spacer(Modifier.width(10.dp))
+                    WheelTimePicker(
+                        startTime = LocalTime(0,0),
+                        size = DpSize(128.dp, 100.dp)
+                    ) { time ->
+                        controller.onChangeHours(time.hour)
+                        controller.onChangeMinutes(time.minute)
+                    }
+                    Spacer(Modifier.width(10.dp))
+                    Text(stringResource(Res.string.minutes))
+                }
+
+                Button(
+                    onClick = controller::startGameWithFile,
+                    modifier = Modifier.fillMaxWidth(),
+                    shape = MaterialTheme.shapes.medium
+                ) {
+                    Text(
+                        text = stringResource(Res.string.start_game),
+                        fontFamily = MaterialTheme.typography.titleSmall.fontFamily
+                    )
+                }
+            }
+
         }
     }
 

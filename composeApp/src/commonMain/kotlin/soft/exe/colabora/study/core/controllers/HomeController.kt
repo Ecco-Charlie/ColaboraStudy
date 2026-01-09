@@ -11,12 +11,14 @@ import colaborastudy.composeapp.generated.resources.Res
 import colaborastudy.composeapp.generated.resources.base_prompt
 import colaborastudy.composeapp.generated.resources.description_not_empty
 import colaborastudy.composeapp.generated.resources.fill_ip
+import colaborastudy.composeapp.generated.resources.no_file_selected
 import colaborastudy.composeapp.generated.resources.no_possible_connect_exam
 import colaborastudy.composeapp.generated.resources.text_image_prompt
 import colaborastudy.composeapp.generated.resources.text_prompt
 import colaborastudy.composeapp.generated.resources.time_cannot_less_60
 import colaborastudy.composeapp.generated.resources.wait_start
 import io.github.vinceglb.filekit.FileKit
+import io.github.vinceglb.filekit.PlatformFile
 import io.github.vinceglb.filekit.dialogs.FileKitType
 import io.github.vinceglb.filekit.dialogs.compose.util.toImageBitmap
 import io.github.vinceglb.filekit.dialogs.openFilePicker
@@ -106,6 +108,16 @@ class HomeController(
 
     val snackState = SnackbarHostState()
 
+    private val _selectedClstFile = MutableStateFlow<PlatformFile?>(null)
+    val selectedClstFile: StateFlow<PlatformFile?> = _selectedClstFile
+
+    fun selectClstFile() {
+        viewModelScope.launch {
+            val file = FileKit.openFilePicker(type = FileKitType.File(extension = "clst"))
+            _selectedClstFile.value = file
+        }
+    }
+
     init {
         viewModelScope.launch {
             val ud = udService.instance
@@ -120,7 +132,7 @@ class HomeController(
     }
 
     fun generateQuestions() {
-        val timeInSeconds = (_minutes.value * 60) + (_hours.value * 3600)
+        val timeInSeconds = getTimeInSeconds()
         if (this._description.value.isEmpty() || this._description.value.length < 10) {
             viewModelScope.launch {
                 snackState.showSnackbar(getString(Res.string.description_not_empty))
@@ -152,6 +164,10 @@ class HomeController(
         }
     }
 
+    private fun getTimeInSeconds(): Int {
+        return (_minutes.value * 60) + (_hours.value * 3600)
+    }
+
     fun connectToExam() {
         viewModelScope.launch {
             if (_ip.value.isEmpty()) {
@@ -170,6 +186,28 @@ class HomeController(
                 _load.value = LoadState.Ok
                 snackState.showSnackbar(getString(Res.string.no_possible_connect_exam))
             }
+        }
+    }
+
+    fun startGameWithFile() {
+        if (_selectedClstFile.value == null) {
+            viewModelScope.launch {
+                snackState.showSnackbar(getString(Res.string.no_file_selected))
+            }
+            return
+        }
+        val timeInSeconds = getTimeInSeconds()
+        if (timeInSeconds < 60) {
+            viewModelScope.launch {
+                snackState.showSnackbar(getString(Res.string.time_cannot_less_60))
+            }
+            return
+        }
+        viewModelScope.launch {
+            _navEvent.send(NavigationEvent.NavigateTo(Lobby))
+            val qs = KoinPlatform.getKoin().get<QuestionsService>()
+            qs.loadQuestionsFile(_selectedClstFile.value!!)
+            qs.setTime(timeInSeconds)
         }
     }
 

@@ -103,4 +103,8 @@
     <string name="exam_questions">Exam questions</string>
     <string name="export_questions">Export questions</string>
     <string name="questions_saved">Questions successfully saved in: </string>
+    <string name="import_clst_file">Or import a .clst file for the questions</string>
+    <string name="select_clst_file">Select a .clst file</string>
+    <string name="file">File</string>
+    <string name="no_file_selected">No file selected</string>
 </resources>
