@@ -10,6 +10,7 @@ import soft.exe.colabora.study.ui.screens.ExamScreen
 import soft.exe.colabora.study.ui.screens.HomeScreen
 import soft.exe.colabora.study.ui.screens.LobbyScreen
 import soft.exe.colabora.study.ui.screens.LoginScreen
+import soft.exe.colabora.study.ui.screens.QuestionsScreen
 import soft.exe.colabora.study.ui.screens.ResultsScreen
 import soft.exe.colabora.study.ui.screens.ResultsServerScreen
 import soft.exe.colabora.study.ui.screens.WaitScreen
@@ -40,6 +41,9 @@ fun NavigationWrapper() {
         composable<Wait> { backStack ->
             val text: Wait = backStack.toRoute()
             WaitScreen(text = text.text) { navigateHandle(navController, it) }
+        }
+        composable<Questions> {
+            QuestionsScreen { navigateHandle(navController, it) }
         }
     }
 

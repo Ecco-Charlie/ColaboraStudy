@@ -99,4 +99,8 @@
     <string name="questions_no_yet_load">The questions have not yet loaded</string>
     <string name="show_results">Show results</string>
     <string name="connection_number">Connection number</string>
+    <string name="show_exam_questions">Show exam questions</string>
+    <string name="exam_questions">Exam questions</string>
+    <string name="export_questions">Export questions</string>
+    <string name="questions_saved">Questions successfully saved in: </string>
 </resources>

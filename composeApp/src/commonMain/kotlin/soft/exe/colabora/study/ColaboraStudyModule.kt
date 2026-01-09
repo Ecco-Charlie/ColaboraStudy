@@ -8,6 +8,7 @@ import soft.exe.colabora.study.core.controllers.ExamController
 import soft.exe.colabora.study.core.controllers.HomeController
 import soft.exe.colabora.study.core.controllers.LobbyController
 import soft.exe.colabora.study.core.controllers.LoginController
+import soft.exe.colabora.study.core.controllers.QuestionsController
 import soft.exe.colabora.study.core.controllers.ResultsController
 import soft.exe.colabora.study.core.controllers.ResultsServerController
 import soft.exe.colabora.study.core.controllers.WaitController
@@ -33,4 +34,5 @@ val appModule = module {
     viewModelOf(::ResultsController)
     viewModelOf(::ResultsServerController)
     viewModelOf(::WaitController)
+    viewModelOf(::QuestionsController)
 }

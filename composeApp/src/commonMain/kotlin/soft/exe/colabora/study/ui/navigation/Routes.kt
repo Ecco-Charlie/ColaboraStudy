@@ -22,3 +22,6 @@ object ResultsServer
 
 @Serializable
 data class Wait(val text: String)
+
+@Serializable
+object Questions

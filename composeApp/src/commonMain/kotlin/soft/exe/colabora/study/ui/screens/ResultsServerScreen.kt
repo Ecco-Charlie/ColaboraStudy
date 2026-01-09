@@ -32,6 +32,7 @@ import colaborastudy.composeapp.generated.resources.finish_exam
 import colaborastudy.composeapp.generated.resources.people_connected
 import colaborastudy.composeapp.generated.resources.results
 import colaborastudy.composeapp.generated.resources.score
+import colaborastudy.composeapp.generated.resources.show_exam_questions
 import colaborastudy.composeapp.generated.resources.show_results
 import colaborastudy.composeapp.generated.resources.time
 import colaborastudy.composeapp.generated.resources.time_remaining
@@ -43,6 +44,7 @@ import soft.exe.colabora.study.ui.components.PlayerOnline
 import soft.exe.colabora.study.ui.components.TitleText
 import soft.exe.colabora.study.ui.components.TopicContent
 import soft.exe.colabora.study.ui.navigation.NavigationEvent
+import soft.exe.colabora.study.ui.navigation.Questions
 
 @Composable
 fun ResultsServerScreen(
@@ -147,6 +149,14 @@ fun ResultsServerScreen(
                     Text(
                         text = stringResource(Res.string.show_results),
                         fontFamily = MaterialTheme.typography.titleSmall.fontFamily
+                    )
+                }
+                Spacer(Modifier.weight(1f))
+                Button(onClick = {
+                    onNavigate(NavigationEvent.NavigateTo(Questions))
+                }) {
+                    Text(
+                        text = stringResource(Res.string.show_exam_questions)
                     )
                 }
             }
