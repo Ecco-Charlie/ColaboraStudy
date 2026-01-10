@@ -19,3 +19,7 @@ plugins {
     alias(libs.plugins.kotlinMultiplatform) apply false
     alias(libs.plugins.buildkonfig) apply false
 }
+
+allprojects {
+    version = "1.0.0"
+}

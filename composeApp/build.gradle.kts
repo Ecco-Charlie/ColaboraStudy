@@ -119,6 +119,8 @@ compose.desktop {
             macOS {
                 iconFile.set(project.file("src/commonMain/composeResources/drawable/icons/logo_bitmap.icns"))
             }
+            vendor = "soft.exe"
+            description = "A collaborative study application with integrated Generative AI"
         }
     }
 }
