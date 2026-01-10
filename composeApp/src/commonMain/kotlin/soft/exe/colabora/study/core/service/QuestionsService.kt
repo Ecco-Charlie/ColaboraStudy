@@ -1,5 +1,7 @@
 package soft.exe.colabora.study.core.service
 
+import colaborastudy.composeapp.generated.resources.Res
+import colaborastudy.composeapp.generated.resources.not_support_file
 import io.github.vinceglb.filekit.PlatformFile
 import io.github.vinceglb.filekit.readString
 import io.ktor.util.decodeBase64String
@@ -9,6 +11,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.serialization.json.Json
+import org.jetbrains.compose.resources.getString
 import soft.exe.colabora.study.BuildKonfig
 import soft.exe.colabora.study.core.entity.PromptParameters
 import soft.exe.colabora.study.core.entity.Question
@@ -36,7 +39,7 @@ class QuestionsService {
         this.promptParameters = pp
     }
 
-    val numOfQuestions: Int get() = this.promptParameters?.numOfQuestions ?: 0
+    val numOfQuestions: Int get() = this._questions.value.size
     val totalTimeInSeconds: Int get() = this.promptParameters?.totalTime ?: totalTime
 
     private val questionsRepository: QuestionsRepository = if (BuildKonfig.TEST_MODE)
@@ -57,6 +60,17 @@ class QuestionsService {
             this._questions.value = questionsRepository.getQuestions(this.promptParameters!!)
         } catch(e: Exception) {
             _generationError.send(e.message.toString())
+        }
+    }
+
+
+    suspend fun loadQuestionsFile(file: PlatformFile) {
+        try {
+            val content = file.readString().decodeBase64String()
+            val questionsFromFile: List<Question> = Json.decodeFromString<List<Question>>(content)
+            this._questions.value = questionsFromFile
+        } catch(e: Exception) {
+            _generationError.send(getString(Res.string.not_support_file))
         }
     }
 
@@ -90,12 +104,6 @@ class QuestionsService {
             score = score,
             totalNumOfQuestions = this._questions.value.size
         ))
-    }
-
-    suspend fun loadQuestionsFile(file: PlatformFile) {
-        val content = file.readString().decodeBase64String()
-        val questionsFromFile: List<Question> = Json.decodeFromString<List<Question>>(content)
-        this._questions.value = questionsFromFile
     }
 
 }

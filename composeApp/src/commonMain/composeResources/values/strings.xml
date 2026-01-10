@@ -134,4 +134,5 @@ Use of the image:
     <string name="unknow_error">Unknow error</string>
     <string name="not_possible_obtain_response">It was not possible to obtain a response</string>
     <string name="no_api_key">The GEMINI_API_KEY is not configured (How to configure it is explained in the README.md file)</string>
+    <string name="not_support_file">It is not a supported file</string>
 </resources>
