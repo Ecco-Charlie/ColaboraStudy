@@ -30,6 +30,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -110,7 +111,7 @@ fun HomeScreen(
     }
 
     LaunchedEffect(Unit) {
-        reason?.let{ controller.snackState.showSnackbar(it) }
+        reason?.let{ controller.snackState.showSnackbar(it, duration = SnackbarDuration.Long) }
     }
 
     Scaffold(

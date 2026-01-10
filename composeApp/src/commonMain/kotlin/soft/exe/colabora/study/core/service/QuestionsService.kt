@@ -39,19 +39,13 @@ class QuestionsService {
     val numOfQuestions: Int get() = this.promptParameters?.numOfQuestions ?: 0
     val totalTimeInSeconds: Int get() = this.promptParameters?.totalTime ?: totalTime
 
-    private val questionsRepository: QuestionsRepository
+    private val questionsRepository: QuestionsRepository = if (BuildKonfig.TEST_MODE)
+        LocalQuestionsRepository()
+    else
+        GeminiQuestionsRepository(BuildKonfig.GEMINI_API_KEY ?: "SOME_GEMINI_API_KEY")
 
     private val _generationError: Channel<String> = Channel()
     val generationError: Flow<String> = _generationError.receiveAsFlow()
-
-
-    init {
-        val geminiApiKey = BuildKonfig.GEMINI_API_KEY
-        this.questionsRepository = if (geminiApiKey != null)
-            GeminiQuestionsRepository(geminiApiKey)
-        else
-            LocalQuestionsRepository()
-    }
 
     fun setTime(time: Int) {
         this.totalTime = time

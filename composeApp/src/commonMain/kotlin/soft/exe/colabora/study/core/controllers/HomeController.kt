@@ -11,6 +11,7 @@ import colaborastudy.composeapp.generated.resources.Res
 import colaborastudy.composeapp.generated.resources.description_not_empty
 import colaborastudy.composeapp.generated.resources.error_while_questions
 import colaborastudy.composeapp.generated.resources.fill_ip
+import colaborastudy.composeapp.generated.resources.no_api_key
 import colaborastudy.composeapp.generated.resources.no_file_selected
 import colaborastudy.composeapp.generated.resources.no_possible_connect_exam
 import colaborastudy.composeapp.generated.resources.time_cannot_less_60
@@ -31,6 +32,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.jetbrains.compose.resources.getString
 import org.koin.mp.KoinPlatform
+import soft.exe.colabora.study.BuildKonfig
 import soft.exe.colabora.study.core.entity.PromptParameters
 import soft.exe.colabora.study.core.entity.UserData
 import soft.exe.colabora.study.core.service.ConnectionClient
@@ -132,6 +134,12 @@ class HomeController(
     }
 
     fun generateQuestions() {
+        if (BuildKonfig.GEMINI_API_KEY == null) {
+            viewModelScope.launch {
+                snackState.showSnackbar(getString(Res.string.no_api_key))
+            }
+            return
+        }
         val timeInSeconds = getTimeInSeconds()
         if (this._description.value.isEmpty() || this._description.value.length < 10) {
             viewModelScope.launch {

@@ -126,25 +126,31 @@ compose.desktop {
 buildkonfig {
     packageName = "soft.exe.colabora.study"
 
-    val geminiPropertiesFile = rootProject.file("gemini.properties")
-    var geminiProperties = Properties()
-    if (geminiPropertiesFile.exists())
-        geminiProperties.load(geminiPropertiesFile.inputStream())
+    val localPropertiesFile = rootProject.file("local.properties")
+    var localProperties = Properties()
+    if (localPropertiesFile.exists())
+        localProperties.load(localPropertiesFile.inputStream())
 
-    val GEMINI_API_KEY: String? = geminiProperties.getProperty("GEMINI_API_KEY")
-    val GEMINI_MODEL: String = geminiProperties.getProperty("GEMINI_MODEL") ?: "gemini-2.0-flash"
+    val geminiApiKey: String? = localProperties.getProperty("GEMINI_API_KEY")
+    val geminiModel: String = localProperties.getProperty("GEMINI_MODEL") ?: "gemini-2.0-flash"
+    val testMode: String = localProperties.getProperty("TEST_MODE") ?: "false"
 
     defaultConfigs {
         buildConfigField(
             type = Type.STRING,
             name = "GEMINI_API_KEY",
-            value = GEMINI_API_KEY,
+            value = geminiApiKey,
             nullable = true
         )
         buildConfigField(
             type = Type.STRING,
             name = "GEMINI_MODEL",
-            value = GEMINI_MODEL
+            value = geminiModel
+        )
+        buildConfigField(
+            type = Type.BOOLEAN,
+            name = "TEST_MODE",
+            value = testMode
         )
     }
 }
