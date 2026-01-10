@@ -30,12 +30,14 @@ class QuestionsService {
 
     private var promptParameters: PromptParameters? = null
 
+    private var totalTime: Int = 0
+
     fun setPromptParameters(pp: PromptParameters) {
         this.promptParameters = pp
     }
 
     val numOfQuestions: Int get() = this.promptParameters?.numOfQuestions ?: 0
-    val totalTimeInSeconds: Int get() = this.promptParameters?.totalTime ?: 0
+    val totalTimeInSeconds: Int get() = this.promptParameters?.totalTime ?: totalTime
 
     private val questionsRepository: QuestionsRepository
 
@@ -49,6 +51,10 @@ class QuestionsService {
             GeminiQuestionsRepository(geminiApiKey)
         else
             LocalQuestionsRepository()
+    }
+
+    fun setTime(time: Int) {
+        this.totalTime = time
     }
 
     suspend fun loadQuestions() {
