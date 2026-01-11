@@ -77,6 +77,8 @@ import colaborastudy.composeapp.generated.resources.trash
 import colaborastudy.composeapp.generated.resources.upload
 import colaborastudy.composeapp.generated.resources.upload_photo
 import dev.darkokoa.datetimewheelpicker.WheelTimePicker
+import dev.darkokoa.datetimewheelpicker.core.format.TimeFormat
+import dev.darkokoa.datetimewheelpicker.core.format.timeFormatter
 import io.github.vinceglb.filekit.path
 import kotlinx.datetime.LocalTime
 import org.jetbrains.compose.resources.stringArrayResource
@@ -243,6 +245,7 @@ fun HomeScreen(
                     Text(stringResource(Res.string.hours))
                     Spacer(Modifier.width(10.dp))
                     WheelTimePicker(
+                        timeFormatter = timeFormatter(TimeFormat.HOUR_24),
                         startTime = LocalTime(0,0),
                         size = DpSize(128.dp, 100.dp)
                     ) { time ->
@@ -295,6 +298,7 @@ fun HomeScreen(
                     Text(stringResource(Res.string.hours))
                     Spacer(Modifier.width(10.dp))
                     WheelTimePicker(
+                        timeFormatter = timeFormatter(TimeFormat.HOUR_24),
                         startTime = LocalTime(0,0),
                         size = DpSize(128.dp, 100.dp)
                     ) { time ->
