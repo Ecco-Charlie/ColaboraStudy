@@ -60,7 +60,7 @@ class ClientPlayer(connection: Socket) : Player(connection) {
             delay(1000)
             this._time.value++
             val l = this.totalTimeInSeconds - this._time.value
-            _timeRemaining.value = "${l/3600}:${(l%3600)/60}:${(l%3600)%60}"
+            _timeRemaining.value = "${(l/3600).toString().padStart(2,'0')}:${((l%3600)/60).toString().padStart(2, '0')}:${((l%3600)%60).toString().padStart(2, '0')}"
         }
     }
 

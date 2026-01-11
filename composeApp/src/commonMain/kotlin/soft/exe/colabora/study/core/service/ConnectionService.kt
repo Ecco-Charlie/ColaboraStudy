@@ -61,7 +61,7 @@ class ConnectionService(private val playerServerRepository: PlayerServerReposito
             delay(1000)
             this.time++
             val l = this.timeInSeconds - this.time
-            _timeRemaining.value = "${l/3600}:${(l%3600)/60}:${(l%3600)%60}"
+            _timeRemaining.value = "${(l/3600).toString().padStart(2,'0')}:${((l%3600)/60).toString().padStart(2, '0')}:${((l%3600)%60).toString().padStart(2, '0')}"
             if ((this.time % 5) == 0)
                 this.playerServerRepository.sendToAll(TickTime(this.time))
         }

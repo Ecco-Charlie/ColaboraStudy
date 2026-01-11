@@ -44,7 +44,7 @@ class ServerPlayer(connection: Socket) : Player(connection) {
             }
             is FinishExam -> {
                 val l = message.time
-                this.time = "${l/3600}:${(l%3600)/60}:${(l%3600)%60}"
+                this.time = "${(l/3600).toString().padStart(2,'0')}:${((l%3600)/60).toString().padStart(2, '0')}:${((l%3600)%60).toString().padStart(2, '0')}"
                 withContext(Dispatchers.Unconfined) {
                     questionsService.evaluateExam(message.questionAnswers) {
                         send(it)
