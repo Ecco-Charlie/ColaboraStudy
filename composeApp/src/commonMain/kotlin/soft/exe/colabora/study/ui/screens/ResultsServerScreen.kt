@@ -68,11 +68,11 @@ fun ResultsServerScreen(
         ) {
             TopicContent(
                 title = stringResource(Res.string.people_connected),
-                heightSpacer = 10.dp
+                heightSpacer = 10.dp,
+                modifier = Modifier.fillMaxWidth()
             ) {
                 LazyRow(
-                    horizontalArrangement = Arrangement.spacedBy(10.dp),
-                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(10.dp)
                 ) {
                     items(players) {
                         PlayerOnline(
