@@ -71,7 +71,7 @@ Returns only JSON with the following structure:
                 "id": number
                 "text": "string (contain Markdown)",
                 "correct": boolean
-            }
+            }, (many answers)
         ]
     }
 ]
