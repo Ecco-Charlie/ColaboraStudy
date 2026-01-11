@@ -8,12 +8,12 @@ import kotlin.random.Random
 class LocalQuestionsRepository : QuestionsRepository {
     override suspend fun getQuestions(prompt: PromptParameters): List<Question> {
         val qR = mutableListOf<Int>()
-        for (i in 0..<prompt.numOfQuestions) {
+        do {
             val rN = Random.nextInt(0, questions.size)
             if(qR.contains(rN))
                 continue
             qR.add(rN)
-        }
+        } while(qR.size != prompt.numOfQuestions)
         return qR.map { questions[it] }
     }
 

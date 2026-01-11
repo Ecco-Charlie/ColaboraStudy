@@ -134,7 +134,7 @@ class HomeController(
     }
 
     fun generateQuestions() {
-        if (BuildKonfig.GEMINI_API_KEY == null) {
+        if (BuildKonfig.GEMINI_API_KEY == null && !BuildKonfig.TEST_MODE) {
             viewModelScope.launch {
                 snackState.showSnackbar(getString(Res.string.no_api_key))
             }
