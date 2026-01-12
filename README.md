@@ -171,4 +171,7 @@ The application was built using [Compose Multiplatform](https://www.jetbrains.co
 | 9  | **[Markdown Render](https://github.com/mikepenz/multiplatform-markdown-renderer)**| Markdown rendering in Kotlin Multiplatform.| `com.mikepenz:multiplatform-markdown-renderer-m3:0.38.1`|
 | 10 | **[Google Generative AI SDK](https://github.com/PatilShreyas/generative-ai-kmp/)**| Generative AI SDK (Gemini) for Kotlin Multiplatform.| `dev.shreyaspatil.generativeai:generativeai-google:0.9.0-1.1.0`|
 
+## License
+This project is licensed under the [Apache License 2.0](LICENSE)
+
 > By *soft.exe*
