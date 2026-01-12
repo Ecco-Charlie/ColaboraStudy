@@ -1,5 +1,7 @@
+import com.codingfeline.buildkonfig.compiler.FieldSpec.Type
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import java.util.Properties
 
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
@@ -7,6 +9,8 @@ plugins {
     alias(libs.plugins.composeMultiplatform)
     alias(libs.plugins.composeCompiler)
     alias(libs.plugins.composeHotReload)
+    kotlin("plugin.serialization") version "2.3.0"
+    id("com.codingfeline.buildkonfig")
 }
 
 kotlin {
@@ -32,6 +36,7 @@ kotlin {
         androidMain.dependencies {
             implementation(compose.preview)
             implementation(libs.androidx.activity.compose)
+            implementation(libs.androidx.core.splashscreen)
         }
         commonMain.dependencies {
             implementation(compose.runtime)
@@ -42,6 +47,19 @@ kotlin {
             implementation(compose.components.uiToolingPreview)
             implementation(libs.androidx.lifecycle.viewmodelCompose)
             implementation(libs.androidx.lifecycle.runtimeCompose)
+            implementation(libs.koin.compose)
+            implementation(libs.koin.compose.viewmodel)
+            implementation(libs.navigation.compose)
+            implementation(libs.multiplatform.settings.no.arg)
+            implementation(libs.kotlinx.serialization.json)
+            implementation(libs.filekit.dialogs.compose)
+            implementation(libs.krop.ui)
+            implementation(libs.krop.extension.filekit)
+            implementation(libs.kotlinx.datetime)
+            implementation(libs.datetime.wheel.picker)
+            implementation(libs.ktor.network)
+            implementation(libs.multiplatform.markdown.renderer.m3)
+            implementation(libs.generativeai.google)
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)
@@ -92,6 +110,49 @@ compose.desktop {
             targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
             packageName = "soft.exe.colabora.study"
             packageVersion = "1.0.0"
+            linux {
+                iconFile.set(project.file("src/commonMain/composeResources/drawable/icons/logo_bitmap.png"))
+            }
+            windows {
+                iconFile.set(project.file("src/commonMain/composeResources/drawable/icons/logo_bitmap.ico"))
+            }
+            macOS {
+                iconFile.set(project.file("src/commonMain/composeResources/drawable/icons/logo_bitmap.icns"))
+            }
+            vendor = "soft.exe"
+            description = "A collaborative study application with integrated Generative AI"
         }
+    }
+}
+
+buildkonfig {
+    packageName = "soft.exe.colabora.study"
+
+    val localPropertiesFile = rootProject.file("local.properties")
+    var localProperties = Properties()
+    if (localPropertiesFile.exists())
+        localProperties.load(localPropertiesFile.inputStream())
+
+    val geminiApiKey: String? = localProperties.getProperty("GEMINI_API_KEY")
+    val geminiModel: String = localProperties.getProperty("GEMINI_MODEL") ?: "gemini-2.0-flash"
+    val testMode: String = localProperties.getProperty("TEST_MODE") ?: "false"
+
+    defaultConfigs {
+        buildConfigField(
+            type = Type.STRING,
+            name = "GEMINI_API_KEY",
+            value = geminiApiKey,
+            nullable = true
+        )
+        buildConfigField(
+            type = Type.STRING,
+            name = "GEMINI_MODEL",
+            value = geminiModel
+        )
+        buildConfigField(
+            type = Type.BOOLEAN,
+            name = "TEST_MODE",
+            value = testMode
+        )
     }
 }

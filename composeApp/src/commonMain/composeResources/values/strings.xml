@@ -1,0 +1,138 @@
+<resources>
+    <string name="colabora_study">ColaboraStudy</string>
+    <string name="create_profile">Create a profile</string>
+    <string name="tap_to_add_avatar">Tap to add an avatar</string>
+    <string name="username">Username</string>
+    <string name="next">Next</string>
+    <string name="your_username">Your username</string>
+    <string name="create_exam">Or create an exam</string>
+    <string name="topic_description">Topic description</string>
+    <string name="describe_topic">Describe the topic you want to generate questions about.</string>
+    <string name="required_field">This field is required</string>
+    <string name="upload_photo">And/Or upload a photo</string>
+    <string name="click_to_photo">Click to add a reference photo</string>
+    <string name="select_file">Select a file</string>
+    <string name="exam_settings">Exam settings</string>
+    <string name="number_questions">Number of questions:</string>
+    <string name="difficulty">Difficulty</string>
+    <string-array name="difficulties">
+        <item>Easy</item>
+        <item>Medium</item>
+        <item>Hard</item>
+    </string-array>
+    <string name="exam_time">Exam time</string>
+    <string name="hours">Hours</string>
+    <string name="minutes">Minutes</string>
+    <string name="base_prompt">
+Act as a university professor who is an expert in the specified area.
+Objective: Generate %1$d questions on the topic "%2$s".
+%5$s
+General conditions:
+- Difficulty: %3$d out of 2
+- Estimated time per question: %4$d seconds
+- Do not include explanations or solutions
+- Do not copy content verbatim
+- Vary the focus of the questions
+
+Format and notation:
+- If the topic is mathematical or formal, use Markdown
+- The content may include rich text
+- The result must be valid JSON
+
+Markdown usage rules:
+- Markdown is ALLOWED only inside string values of:
+  - question
+  - answers.text
+- Allowed Markdown elements:
+  - **bold**
+  - *italic*
+  - __underline__
+  - ### titles
+  - > inline annotations
+- Markdown must NOT be used:
+  - Outside string values
+  - In JSON keys
+  - To wrap the full response
+  - Using Markdown code fences (```)
+
+IMPORTANT:
+- The JSON structure must remain valid
+- Markdown must not break JSON syntax
+- The response must start with [ and end with ]
+
+Output format:
+Returns only JSON with the following structure:
+[
+    {
+        "id": number,
+        "question": "string (contain Markdown)",
+        "answers": [
+            {
+                "id": number
+                "text": "string (contain Markdown)",
+                "correct": boolean
+            }, (many answers)
+        ]
+    }
+]
+    </string>
+    <string name="text_prompt">
+Entry:
+Reference information is provided in text only.
+    </string>
+    <string name="text_image_prompt">
+Input:
+- Text: Defines the topic, difficulty, and format
+- Image: Corresponds to an actual exam and is used only for reference
+
+Use of the image:
+- Analyze style, format, and level
+- Do not copy or rephrase questions
+- Generate new questions based on the analysis.
+    </string>
+    <string name="loading_questions">Loading questions...</string>
+    <string name="everything_ready">Everything is ready to begin.</string>
+    <string name="people_connected">People connected</string>
+    <string name="no_one_online">No one is online yet.</string>
+    <string name="start_game">Start the game</string>
+    <string name="participate_exam">Participate in the exam</string>
+    <string name="exam">Exam</string>
+    <string name="waiting_results">Waiting for results...</string>
+    <string name="your_score">Your score was:</string>
+    <string name="show_corrections">Show correction</string>
+    <string name="back_top">Back to top</string>
+    <string name="results">Results</string>
+    <string name="score">Score</string>
+    <string name="time">Time</string>
+    <string name="finish_exam">Finish the exam</string>
+    <string name="join_exam">Join an exam</string>
+    <string name="join">Join</string>
+    <string name="wait_start">Waiting for the exam to start...</string>
+    <string name="waiting_exam_end">Waiting for the exam to end</string>
+    <string name="time_remaining">Time remaining: </string>
+    <string name="image_too_large">The image is too large (Maximum 5MB)</string>
+    <string name="an_unexpected_error">An unexpected error occurred, please try again</string>
+    <string name="username_cannot_empty">The username cannot be empty</string>
+    <string name="description_not_empty">The description must not be empty (minimum 10 characters)</string>
+    <string name="time_cannot_less_60">The time cannot be less than 60 seconds</string>
+    <string name="fill_ip">Please fill in the IP field</string>
+    <string name="no_possible_connect_exam">It was not possible to connect to the exam</string>
+    <string name="exam_cannot_have_0">The exam cannot have 0 participants</string>
+    <string name="questions_no_yet_load">The questions have not yet loaded</string>
+    <string name="show_results">Show results</string>
+    <string name="connection_number">Connection number</string>
+    <string name="show_exam_questions">Show exam questions</string>
+    <string name="exam_questions">Exam questions</string>
+    <string name="export_questions">Export questions</string>
+    <string name="questions_saved">Questions successfully saved in: </string>
+    <string name="import_clst_file">Or import a .clst file for the questions</string>
+    <string name="select_clst_file">Select a .clst file</string>
+    <string name="file">File</string>
+    <string name="no_file_selected">No file selected</string>
+    <string name="error_while_questions">An error occurred while loading questions</string>
+    <string name="request_could_not_completed">The request could not be completed due to: </string>
+    <string name="unknow_error">Unknow error</string>
+    <string name="not_possible_obtain_response">It was not possible to obtain a response</string>
+    <string name="no_api_key">The GEMINI_API_KEY is not configured (How to configure it is explained in the README.md file)</string>
+    <string name="not_support_file">It is not a supported file</string>
+</resources>
