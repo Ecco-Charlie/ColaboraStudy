@@ -130,6 +130,9 @@ Donde se te proporciona la *ruta* al archivo generado
 ## Especificaciones técnicas
 La aplicación fue construida utilizando [Compose Multiplatform](https://www.jetbrains.com/compose-multiplatform/), asi podemos utilizar el mismo proyecto para multiples plataformas sin necesidad de codificar en cada plataforma.
 
+### Conexiones
+![Flujo de trabajo](screenshots/flow.png)
+
 ### Uso de de librerias externas
 | # | Librería | Descripción | Dependencias |
 |---|---------|-------------|--------------|
